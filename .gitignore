@@ -1,0 +1,16 @@
+# Secrets (IMPORTANT)
+keys/
+generateKeys.js
+
+# Test / dev tools (optional)
+testSignature.js
+# Secrets
+keys/
+*.pem
+
+# Node
+node_modules/
+
+# Test / local scripts (optional)
+testSignature.js
+generateKeys.js

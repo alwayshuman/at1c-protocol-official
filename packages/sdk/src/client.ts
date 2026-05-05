@@ -1,4 +1,4 @@
-
+const { createSignedReceipt } = require("../../../src/crypto/createSignedReceipt")
 const fs = require("fs")
 const path = require("path")
 
@@ -54,20 +54,19 @@ export class AT1C {
     const answer: string = await new Promise((resolve) => {
       rl.question("\nApprove? (y/n): ", (input: string) => {
         rl.close()
-        resolve(input)
+
       })
     })
 
     const approved = answer.toLowerCase() === "y"
-
-    const receipt = {
-      receiptId: "receipt_" + Date.now(),
-      userId,
-      action,
-      actor,
-      status: approved ? "approved" : "denied",
-      timestamp: Date.now()
-    }
+const receipt = createSignedReceipt({
+  receiptId: "receipt_" + Date.now(),
+  userId,
+  action,
+  actor,
+  status: approved ? "approved" : "denied",
+  timestamp: Date.now()
+})
 
     this.receipts.push(receipt)
     this.saveReceipts()
