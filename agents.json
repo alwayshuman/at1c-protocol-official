@@ -1,0 +1,8 @@
+[
+  {
+    "agentId": "agent_1",
+    "ownerUserId": "user_demo",
+    "permissions": ["Sign in", "Read data"],
+    "expiresAt": null
+  }
+]

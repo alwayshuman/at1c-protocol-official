@@ -1,46 +1,43 @@
+
 import { AT1C } from "../../packages/sdk/src/client"
 
-async function run() {
-  const at1c = new AT1C({ apiKey: "demo_key" })
-
-  console.clear()
-
+async function main() {
   console.log("===================================")
   console.log("🌐 demo-app.com")
   console.log("===================================\n")
 
-  console.log("🔘 [ Sign in with AT1C ]\n")
+  const at1c = new AT1C({ apiKey: "demo_key" })
 
-  // simulate button click
-  await new Promise(res => setTimeout(res, 1000))
+  console.log("🔘 [ Sign in with AT1C ]\n")
 
   console.log("👉 User clicked 'Sign in with AT1C'\n")
 
-  // Step 1 — identify
-  const user = await at1c.identify()
-  console.log("🧑 Identified:", user.userId)
+  // simple user (no identify() needed now)
+  const userId = "user_" + Math.random().toString(36).substring(2, 8)
 
-  // Step 2 — approval request
+  console.log("🧑 Identified:", userId)
   console.log("\n📲 Sending approval request to user...\n")
 
-  const result = await at1c.approve({
-    userId: user.userId,
-    action: "Sign in",
-    actor: "demo-app.com"
-  })
+  const result = await at1c.enforce(
+    {
+      userId,
+      action: "Sign in",
+      actor: "demo-app.com"
+    },
+    async () => {
+      return {
+        success: true
+      }
+    }
+  )
 
-  // Step 3 — result
+  console.log("\n🔐 Result:", result)
+
   if (result.status === "approved") {
-    console.log("\n✅ Access Granted")
-    console.log("🔐 Proof:", result.proof)
-
-    console.log("\n🎉 Welcome back!")
+    console.log("\n✅ Login successful")
   } else {
-    console.log("\n❌ Access Denied")
-    console.log("🚫 User rejected the request")
+    console.log("\n❌ Login denied")
   }
-
-  console.log("\n===================================")
 }
 
-run()
+main()

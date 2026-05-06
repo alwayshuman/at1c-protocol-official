@@ -2,9 +2,18 @@
   {
     "receiptId": "receipt_1777722546808",
     "userId": "user_0en1ld",
-    "action": "Sign in",
+    "action": "Sign out",
     "actor": "demo-app.com",
     "status": "approved",
     "timestamp": 1777722546808
+  },
+  {
+    "receiptId": "receipt_1778066584122",
+    "userId": "user_um1mzu",
+    "action": "Sign in",
+    "actor": "demo-app.com",
+    "status": "approved",
+    "timestamp": 1778066584122,
+    "signature": "18c31fb910d4cd664515ecdfecfb092cc87cf6bf9d7b9b6b781ec44ddcde4f3bf72e4e465982219eaa89d67edb9f003f590ff10aae185d3974638fca1bae8b0d"
   }
 ]
