@@ -1,32 +1,38 @@
-
 import { AT1C } from "../../packages/sdk/src/client"
 
 async function main() {
-  console.log("===================================")
+
+  console.log("\n===================================")
   console.log("🌐 demo-app.com")
   console.log("===================================\n")
 
-  const at1c = new AT1C({ apiKey: "demo_key" })
-
   console.log("🔘 [ Sign in with AT1C ]\n")
+
+  const at1c = new AT1C({
+    apiKey: "demo_key"
+  })
 
   console.log("👉 User clicked 'Sign in with AT1C'\n")
 
-  // simple user (no identify() needed now)
-  const userId = "user_" + Math.random().toString(36).substring(2, 8)
+  // ALWAYS use persistent identity
+  const user = await at1c.identify()
 
-  console.log("🧑 Identified:", userId)
+  console.log("🧑 Identified:", user.userId)
+
   console.log("\n📲 Sending approval request to user...\n")
 
+  // Protected action
   const result = await at1c.enforce(
     {
-      userId,
+      userId: user.userId,
       action: "Sign in",
       actor: "demo-app.com"
     },
+
     async () => {
       return {
-        success: true
+        success: true,
+        sessionToken: "session_abc123"
       }
     }
   )
@@ -34,7 +40,7 @@ async function main() {
   console.log("\n🔐 Result:", result)
 
   if (result.status === "approved") {
-    console.log("\n✅ Login successful")
+    console.log("\n✅ Login approved")
   } else {
     console.log("\n❌ Login denied")
   }

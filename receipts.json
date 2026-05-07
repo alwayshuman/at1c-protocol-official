@@ -15,5 +15,14 @@
     "status": "approved",
     "timestamp": 1778066584122,
     "signature": "18c31fb910d4cd664515ecdfecfb092cc87cf6bf9d7b9b6b781ec44ddcde4f3bf72e4e465982219eaa89d67edb9f003f590ff10aae185d3974638fca1bae8b0d"
+  },
+  {
+    "receiptId": "receipt_1778148412588",
+    "userId": "user_demo",
+    "action": "Sign in",
+    "actor": "demo-app.com",
+    "status": "approved",
+    "timestamp": 1778148412588,
+    "signature": "cf0ff3bc71a2dec2879f8843c0e1e94e166b50691c013162d73e0582864aaf999df5cb3a62da0726a55d574d485bc387cc44cc92f3b9daee7e7e4c6c8d732f0c"
   }
 ]
