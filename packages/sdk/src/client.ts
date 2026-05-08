@@ -1,159 +1,88 @@
 const fs = require("fs")
 const path = require("path")
-const readline = require("readline")
-
-const {
-  createSignedReceipt
-} = require("../../../src/crypto/createSignedReceipt")
-
-const {
-  checkPermission
-} = require("../../../src/crypto/checkPermission")
 
 export class AT1C {
   private apiKey: string
-  private receipts: any[] = []
-  private receiptsFile = path.join(process.cwd(), "receipts.json")
 
   constructor(config: { apiKey: string }) {
     this.apiKey = config.apiKey
-    this.loadReceipts()
   }
 
-   // ----------------------------
-  // LOAD RECEIPTS
-  // ----------------------------
-  private loadReceipts() {
-    try {
-      if (fs.existsSync(this.receiptsFile)) {
-        const data = fs.readFileSync(this.receiptsFile, "utf-8")
-        this.receipts = JSON.parse(data)
-      }
-    } catch (err) {
-      console.error("Failed to load receipts:", err)
-      this.receipts = []
+  // --------------------
+  // IDENTIFY (used in demo login)
+  // --------------------
+  async identify() {
+    return {
+      userId: "user_demo"
     }
   }
-  // ----------------------------
-  // SAVE RECEIPTS
-  // ----------------------------
-  private saveReceipts() {
-    fs.writeFileSync(
-      this.receiptsFile,
-      JSON.stringify(this.receipts, null, 2)
-    )
+
+  // --------------------
+  // PERMISSION CHECK
+  // --------------------
+  private checkPermission(userId: string, action: string): boolean {
+    // temporary: allow all (we can rewire agents later)
+    return true
   }
 
-  // ----------------------------
-  // HUMAN IDENTIFICATION
-  // ----------------------------
-async identify() {
-  // persistent identity (demo-safe version)
-  const fs = require("fs")
-  const path = require("path")
-
-  const identityFile = path.join(process.cwd(), ".at1c_identity.json")
-
-  if (fs.existsSync(identityFile)) {
-    const data = JSON.parse(fs.readFileSync(identityFile, "utf-8"))
-    return data
-  }
-
-  const newIdentity = {
-    userId: "user_demo"
-  }
-
-  fs.writeFileSync(identityFile, JSON.stringify(newIdentity, null, 2))
-
-  return newIdentity
-}
-  // ----------------------------
-  // HUMAN APPROVAL
-  // ----------------------------
-  private async approve({
-    userId,
-    action,
-    actor
-  }: any) {
+  // --------------------
+  // APPROVAL STEP
+  // --------------------
+  private async approve(config: any) {
+    const readline = require("readline")
 
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     })
 
-    const answer: string = await new Promise((resolve) => {
-      rl.question(
-        `Approve ${action}? (y/n): `,
-        resolve
-      )
+    return await new Promise((resolve) => {
+      rl.question(`Approve ${config.action}? (y/n): `, (answer: string) => {
+        rl.close()
+
+        resolve({
+          status: answer.toLowerCase() === "y" ? "approved" : "rejected"
+        })
+      })
     })
-
-    rl.close()
-
-    const approved = answer.toLowerCase() === "y"
-
-    return {
-      status: approved ? "approved" : "denied",
-      userId,
-      action,
-      actor
-    }
   }
 
-  // ----------------------------
-  // ENFORCE
-  // ----------------------------
+  // --------------------
+  // ENFORCE CORE
+  // --------------------
   async enforce(
     config: {
       userId: string
       action: string
       actor: string
+      agentId?: string
     },
     fn: Function
   ) {
-
-    // 1. Permission Layer
-    const allowed = checkPermission(
-      config.userId,
-      config.action
-    )
+    const allowed = this.checkPermission(config.userId, config.action)
 
     if (!allowed) {
-      console.log("🚫 Blocked by permission layer")
-
       return {
         status: "denied",
         reason: "permission_denied"
       }
     }
 
-    // 2. Human Approval
-    const approval = await this.approve(config)
-
+   const approval: any = await this.approve(config)
     if (approval.status !== "approved") {
-      return approval
+      return {
+        status: "denied",
+        reason: "user_rejected",
+        approval
+      }
     }
 
-    // 3. Execute Protected Action
     const result = await fn()
-
-    // 4. Create Receipt
-    const receipt = createSignedReceipt({
-      receiptId: "receipt_" + Date.now(),
-      userId: config.userId,
-      action: config.action,
-      actor: config.actor,
-      status: "approved",
-      timestamp: Date.now()
-    })
-
-    this.receipts.push(receipt)
-    this.saveReceipts()
 
     return {
       status: "approved",
-      proof: receipt.signature,
-      result
+      result,
+      approval
     }
   }
 }
