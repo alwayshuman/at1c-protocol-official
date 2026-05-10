@@ -2,7 +2,8 @@ const crypto = require("crypto")
 const fs = require("fs")
 
 function signAgentAction(agentId, payload) {
-  const agents = JSON.parse(fs.readFileSync("agents.json", "utf-8"))
+  const raw = fs.readFileSync("agents.json", "utf-8")
+  const agents = JSON.parse(raw)
 
   const agent = agents.find(a => a.agentId === agentId)
 
@@ -10,21 +11,22 @@ function signAgentAction(agentId, payload) {
     throw new Error("Agent not found")
   }
 
-  const sign = crypto.createSign("SHA256")
+  const privateKey = agent.privateKey
 
-  sign.update(JSON.stringify(payload))
-  sign.end()
+  const data = JSON.stringify(payload)
 
-  const signature = sign.sign(agent.privateKey, "hex")
+  const signature = crypto.sign(
+    null,
+    Buffer.from(data),
+    {
+      key: privateKey,
+      format: "pem"
+    }
+  )
 
-  return {
-    agentId,
-    payload,
-    signature,
-    timestamp: Date.now()
-  }
+  return signature.toString("hex")
 }
 
-module.exports = { signAgentAction }
-)
-
+module.exports = {
+  signAgentAction
+}

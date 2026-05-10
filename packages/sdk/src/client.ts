@@ -20,11 +20,32 @@ export class AT1C {
   // --------------------
   // PERMISSION CHECK
   // --------------------
-  private checkPermission(userId: string, action: string): boolean {
-    // temporary: allow all (we can rewire agents later)
-    return true
-  }
+private checkPermission(userId: string, action: string): boolean {
+  const fs = require("fs")
 
+  try {
+    const raw = fs.readFileSync("agents.json", "utf-8")
+    const agents = JSON.parse(raw)
+
+    const agent = agents.find(
+      (a: any) => a.ownerUserId === userId
+    )
+
+    if (!agent) {
+      console.log("❌ No agent found")
+      return false
+    }
+
+    console.log("🔍 Agent:", agent.agentId)
+    console.log("🔍 Permissions:", agent.permissions)
+
+    return agent.permissions.includes(action)
+
+  } catch (err) {
+    console.log("❌ Permission system failure")
+    return false
+  }
+}
   // --------------------
   // APPROVAL STEP
   // --------------------
@@ -50,39 +71,40 @@ export class AT1C {
   // --------------------
   // ENFORCE CORE
   // --------------------
-  async enforce(
-    config: {
-      userId: string
-      action: string
-      actor: string
-      agentId?: string
-    },
-    fn: Function
-  ) {
-    const allowed = this.checkPermission(config.userId, config.action)
+async enforce(
+  config: {
+    userId: string
+    action: string
+    actor: string
+    agentId?: string
+  },
+  fn: Function
+) {
+  const allowed = this.checkPermission(config.userId, config.action)
 
-    if (!allowed) {
-      return {
-        status: "denied",
-        reason: "permission_denied"
-      }
-    }
-
-   const approval: any = await this.approve(config)
-    if (approval.status !== "approved") {
-      return {
-        status: "denied",
-        reason: "user_rejected",
-        approval
-      }
-    }
-
-    const result = await fn()
-
+  if (!allowed) {
     return {
-      status: "approved",
-      result,
+      status: "denied",
+      reason: "permission_denied"
+    }
+  }
+
+  const approval = await this.approve(config) as any
+
+  if (approval.status !== "approved") {
+    return {
+      status: "denied",
+      reason: "user_rejected",
       approval
     }
   }
+
+  const result = await fn()
+
+  return {
+    status: "approved",
+    result,
+    approval
+  }
+}
 }

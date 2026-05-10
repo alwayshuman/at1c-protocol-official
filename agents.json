@@ -1,14 +1,5 @@
 [
   {
-    "agentId": "agent_1",
-    "ownerUserId": "user_demo",
-    "permissions": [
-      "Sign in",
-      "Read data"
-    ],
-    "expiresAt": null
-  },
-  {
     "agentId": "agent_3678c68b",
     "ownerUserId": "user_demo",
     "permissions": [
