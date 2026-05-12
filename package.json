@@ -8,11 +8,12 @@
     "example": "examples"
   },
   "scripts": {
-  "demo:login": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' examples/login-demo/index.ts",
-  "demo:ai": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' examples/ai-agent-demo/index.ts",
-  "receipts": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' examples/receipts-viewer.ts",
-  "verify": "node verify.js"
-},
+    "demo:login": "npx ts-node examples/login-demo/index.ts",
+    "build": "npx tsc --noEmit",
+    "demo:ai": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' examples/ai-agent-demo/index.ts",
+    "receipts": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' examples/receipts-viewer.ts",
+    "verify": "node verify.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alwayshuman/at1c.git"
@@ -23,5 +24,9 @@
   "bugs": {
     "url": "https://github.com/alwayshuman/at1c/issues"
   },
-  "homepage": "https://github.com/alwayshuman/at1c#readme"
+  "homepage": "https://github.com/alwayshuman/at1c#readme",
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "typescript": "^6.0.3"
+  }
 }

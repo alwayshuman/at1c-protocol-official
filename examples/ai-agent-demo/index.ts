@@ -19,11 +19,19 @@ async function run() {
   console.log("⚠️  Action Requested:")
   console.log(action)
 
-  const result = await at1c.approve({
-    userId: user.userId,
-    action,
-    actor: "ai-agent"
-  })
+  const result = await at1c.enforce(
+  {
+    userId: "user_demo",
+    action: "transfer_funds",
+    actor: "demo_agent"
+  },
+  async () => {
+    return {
+      success: true,
+      txId: "demo_tx_001"
+    }
+  }
+)
 
   if (result.status === "approved") {
     console.log("\n✅ Approved — AI executes action")
@@ -36,3 +44,4 @@ async function run() {
 }
 
 run()
+
