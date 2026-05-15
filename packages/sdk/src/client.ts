@@ -1,6 +1,6 @@
 const fs = require("fs");
 const readline = require("readline");
-
+const crypto = require("crypto");
 export class AT1C {
   private apiKey: string;
 
@@ -47,38 +47,71 @@ export class AT1C {
   // --------------------
   // APPROVAL STEP
   // --------------------
-  private async approve(config: any): Promise<{ status: string }> {
+private async approve(config: any): Promise<{
+  status: string;
+  timestamp: number;
+  signature: string | null;
+}> {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
     });
+return new Promise((resolve) => {
+  rl.question(
+    `Approve ${config.action}? (y/n): `,
+    (answer: string) => {
+      rl.close();
 
-    return new Promise((resolve) => {
-      rl.question(
-        `Approve ${config.action}? (y/n): `,
-        (answer: string) => {
-          rl.close();
+      const approved = answer.toLowerCase() === "y";
+const timestamp = Date.now();
 
-          resolve({
-            status: answer.toLowerCase() === "y" ? "approved" : "rejected",
-          });
-        }
-      );
-    });
-  }
-
+const signature = crypto
+  .createHash("sha256")
+  .update(
+    JSON.stringify({
+      userId: config.userId,
+      action: config.action,
+      agentId: config.agentId || "unknown",
+      timestamp,
+    })
+  )
+  .digest("hex");
+      resolve({
+        status: approved ? "approved" : "rejected",
+timestamp,
+signature: approved ? signature : null,
+      });
+    }
+  );
+});
+}
   // --------------------
   // CORE ENFORCEMENT
   // --------------------
-  async enforce(
-    config: {
-      userId: string;
-      action: string;
-      actor: string;
-      agentId?: string;
-    },
-    fn: () => Promise<any> | any
-  ): Promise<any> {
+private verifyApproval(approval: any, config: any): boolean {
+  const expected = crypto
+    .createHash("sha256")
+    .update(
+      JSON.stringify({
+        userId: config.userId,
+        action: config.action,
+        agentId: config.agentId || "unknown",
+        timestamp: approval.timestamp,
+      })
+    )
+    .digest("hex");
+
+  return expected === approval.signature;
+}
+async enforce(
+  config: {
+    userId: string;
+    action: string;
+    actor: string;
+    agentId?: string;
+  },
+  fn: () => Promise<any> | any
+): Promise<any> {
     const allowed = this.checkPermission(config.userId, config.action);
 
     if (!allowed) {
@@ -89,7 +122,14 @@ export class AT1C {
     }
 
     const approval = await this.approve(config);
+const valid = this.verifyApproval(approval, config);
 
+if (!valid) {
+  return {
+    status: "denied",
+    reason: "invalid_signature",
+  };
+}
     if (approval.status !== "approved") {
       return {
         status: "denied",

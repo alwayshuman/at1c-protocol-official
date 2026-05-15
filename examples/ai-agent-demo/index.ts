@@ -18,29 +18,30 @@ async function run() {
 
   console.log("⚠️  Action Requested:")
   console.log(action)
-
-  const result = await at1c.enforce(
+const result = await at1c.enforce(
   {
     userId: "user_demo",
-    action: "transfer_funds",
-    actor: "demo_agent"
+    action: "send_email",
+    actor: "ai-agent",
+    agentId: "agent_3678c68b"
   },
   async () => {
     return {
-      success: true,
-      txId: "demo_tx_001"
+      message: "Email sent (simulated)"
     }
   }
 )
+console.log("\n📦 Result:")
+console.log(result)
 
-  if (result.status === "approved") {
-    console.log("\n✅ Approved — AI executes action")
-    console.log("📨 Email sent (simulated)")
-  } else {
-    console.log("\n❌ Denied — AI blocked")
-  }
+if (result.status === "approved") {
+  console.log("\n✅ Approved — AI executes action")
+  console.log("📨 Email sent (simulated)")
+} else {
+  console.log("\n❌ Denied — AI blocked")
+}
 
-  console.log("\n===================================")
+console.log("\n===================================")
 }
 
 run()

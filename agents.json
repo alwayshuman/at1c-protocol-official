@@ -3,7 +3,8 @@
     "agentId": "agent_3678c68b",
     "ownerUserId": "user_demo",
     "permissions": [
-      "Sign in"
+      "Sign in",
+      "send_email"
     ],
     "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPXLNr9Y602UKzFSgWvDOkOpSSx2kAYyyUmJWMkxW2qQ=\n-----END PUBLIC KEY-----\n",
     "privateKey": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIClcSWWuH7vjGofMdxtdGyPwCk5i8IMWx3KDr/kqlYhv\n-----END PRIVATE KEY-----\n",
