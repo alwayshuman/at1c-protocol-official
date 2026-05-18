@@ -63,40 +63,27 @@ return new Promise((resolve) => {
     `Approve ${config.action}? (y/n): `,
     (answer: string) => {
       rl.close();
-const approved =
-  answer.toLowerCase() === "y";
 
-const timestamp =
-  new Date().toISOString();
-
-const payload =
-  createApprovalPayload({
-    userId: config.userId,
-    action: config.action,
-    agentId: config.agentId,
-    timestamp,
-  });
-
-const signature =
-  createApprovalSignature(payload);
-
-const approval: ApprovalReceipt = {
+      const approved = answer.toLowerCase() === "y";
+const timestamp = new Date().toISOString();
+const payload = createApprovalPayload({
+  userId: config.userId,
+  action: config.action,
+agentId: config.agentId,
+  timestamp,
+});
+const signature = createApprovalSignature(payload);
+resolve(approval);
+this.approvalLog.push(approval);
   version: "1.0",
-  status: approved
-    ? "approved"
-    : "denied",
+  status: approved ? "approved" : "denied",
   userId: config.userId,
   agentId: config.agentId,
   action: config.action,
   timestamp,
-  signature,
-};
-
-resolve(approval);
-    }
-  );
+  signature: approved ? signature : signature,
 });
-}
+    }
   // --------------------
   // CORE ENFORCEMENT
   // --------------------
@@ -130,7 +117,6 @@ async enforce(
     }
 
     const approval = await this.approve(config);
-this.approvalLog.push(approval);
 const valid = this.verifyApproval(approval, config);
 
 if (!valid) {
