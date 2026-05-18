@@ -5,11 +5,33 @@ import { ApprovalReceipt } from "./types";
 import {
   createApprovalPayload,
   createApprovalSignature,
+  hashReceipt,
   signaturesMatch,
 } from "./crypto";
 export class AT1C {
 private approvalLog: ApprovalReceipt[] = [];
   private apiKey: string;
+getApprovalLog(): ApprovalReceipt[] {
+  return this.approvalLog;
+}
+getReceiptById(
+  receiptId: string
+): ApprovalReceipt | undefined {
+  return this.approvalLog.find(
+    (receipt) =>
+      receipt.receiptId === receiptId
+  );
+}
+exportReceipts(path: string): void {
+  fs.writeFileSync(
+    path,
+    JSON.stringify(
+      this.approvalLog,
+      null,
+      2
+    )
+  );
+}
   constructor(config: { apiKey: string }) {
     this.apiKey = config.apiKey;
   }
@@ -76,15 +98,23 @@ const payload =
     agentId: config.agentId,
     timestamp,
   });
-
 const signature =
   createApprovalSignature(payload);
 
 const approval: ApprovalReceipt = {
+  receiptId: crypto.randomUUID(),
+  receiptHash: hashReceipt({
+    receiptId: crypto.randomUUID(),
+    version: "1.0",
+    status: approved ? "approved" : "denied",
+    userId: config.userId,
+    agentId: config.agentId,
+    action: config.action,
+    timestamp,
+    signature,
+  }),
   version: "1.0",
-  status: approved
-    ? "approved"
-    : "denied",
+  status: approved ? "approved" : "denied",
   userId: config.userId,
   agentId: config.agentId,
   action: config.action,

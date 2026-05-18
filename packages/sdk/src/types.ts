@@ -1,4 +1,6 @@
 export interface ApprovalReceipt {
+  receiptId: string;
+  receiptHash: string;
   version: string;
   status: "approved" | "denied";
   userId: string;

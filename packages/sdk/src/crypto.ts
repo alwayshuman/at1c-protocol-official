@@ -34,3 +34,13 @@ export function signaturesMatch(
 
   return crypto.timingSafeEqual(actualBuffer, expectedBuffer);
 }
+export function hashReceipt(
+  receipt: any
+): string {
+  return require("crypto")
+    .createHash("sha256")
+    .update(
+      JSON.stringify(receipt)
+    )
+    .digest("hex");
+}
