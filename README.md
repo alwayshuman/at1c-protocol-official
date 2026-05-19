@@ -1,3 +1,20 @@
+Major AT1C milestone today.
+
+The SDK now supports:
+
+✅ Human approval flow for AI actions
+✅ Signed approval receipts
+✅ Receipt hashing + verification
+✅ Tamper detection
+✅ Replay protection
+✅ End-to-end terminal demo
+
+Example flow:
+AI agent requests action → human approves → cryptographic receipt generated → receipt verification succeeds → tampered receipt fails verification.
+
+Finally got the TypeScript structure stabilized too 😅
+
+Feels great seeing the full loop working end-to-end.
 
   **AT1C Protocol**
 
