@@ -11,6 +11,7 @@ import {
 export class AT1C {
 private approvalLog: ApprovalReceipt[] = [];
   private apiKey: string;
+private seenReceipts = new Set<string>();
 getApprovalLog(): ApprovalReceipt[] {
   return this.approvalLog;
 }
@@ -18,9 +19,31 @@ getReceiptById(
   receiptId: string
 ): ApprovalReceipt | undefined {
   return this.approvalLog.find(
-    (receipt) =>
-      receipt.receiptId === receiptId
+    (receipt) => receipt.receiptId === receiptId
   );
+}
+verifyReceipt(
+  receipt: ApprovalReceipt
+): boolean {
+const calculatedHash =
+  hashReceipt({
+    receiptId: receipt.receiptId,
+    version: receipt.version,
+    status: receipt.status,
+    userId: receipt.userId,
+    agentId: receipt.agentId,
+    action: receipt.action,
+    timestamp: receipt.timestamp,
+    signature: receipt.signature,
+  });
+
+// 🔴 REPLAY PROTECTION
+if (this.seenReceipts.has(receipt.receiptId)) {
+  return false;
+}
+
+this.seenReceipts.add(receipt.receiptId);
+return calculatedHash === receipt.receiptHash;
 }
 exportReceipts(path: string): void {
   fs.writeFileSync(
@@ -100,11 +123,14 @@ const payload =
   });
 const signature =
   createApprovalSignature(payload);
+const receiptId =
+  crypto.randomUUID();
 
 const approval: ApprovalReceipt = {
-  receiptId: crypto.randomUUID(),
+  receiptId: receiptId,
+
   receiptHash: hashReceipt({
-    receiptId: crypto.randomUUID(),
+    receiptId: receiptId,
     version: "1.0",
     status: approved ? "approved" : "denied",
     userId: config.userId,
@@ -113,6 +139,7 @@ const approval: ApprovalReceipt = {
     timestamp,
     signature,
   }),
+
   version: "1.0",
   status: approved ? "approved" : "denied",
   userId: config.userId,
@@ -121,7 +148,6 @@ const approval: ApprovalReceipt = {
   timestamp,
   signature,
 };
-
 resolve(approval);
     }
   );

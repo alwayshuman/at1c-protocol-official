@@ -33,7 +33,33 @@ const result = await at1c.enforce(
 )
 console.log("\n📦 Result:")
 console.log(result)
+const receipts =
+  at1c.getApprovalLog();
 
+const latestReceipt =
+  receipts[receipts.length - 1];
+
+const verified =
+  at1c.verifyReceipt(
+    latestReceipt
+  );
+
+console.log(
+  "Receipt verified:",
+  verified
+);
+latestReceipt.action =
+  "tampered_action";
+
+const tamperedVerified =
+  at1c.verifyReceipt(
+    latestReceipt
+  );
+
+console.log(
+  "Tampered receipt verified:",
+  tamperedVerified
+);
 if (result.status === "approved") {
   console.log("\n✅ Approved — AI executes action")
   console.log("📨 Email sent (simulated)")
