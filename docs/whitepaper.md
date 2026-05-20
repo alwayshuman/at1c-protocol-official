@@ -1,5 +1,7 @@
 📄 AT1C Whitepaper v1
-🔐 AT1C Protocol
+  
+   
+   AT1C Protocol
 A Consent Layer for Human-Controlled AI and Digital Action
 Abstract
 
@@ -149,7 +151,6 @@ AI governance systems
 Digital identity control layers
 Auditable automation infrastructure
 Decentralised trust networks
-Closing Statement
 
 The future of AI is not defined solely by capability, but by governance.
 
