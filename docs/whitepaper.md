@@ -8,7 +8,7 @@ Abstract**
 
 AT1C is a protocol that ensures no digital system—human application or autonomous AI agent—can act on behalf of a user without explicit, verifiable consent.
 
-It introduces a foundational shift in computing:
+**It introduces a foundational shift in computing:**
 
 From implicit execution → consent-based execution
 
@@ -20,7 +20,7 @@ AT1C establishes a universal approval layer for digital systems, enabling humans
 
 **1. The Problem**
 
-Modern digital systems increasingly operate through implicit trust:
+**Modern digital systems increasingly operate through implicit trust:**
 
 Applications act on behalf of users without explicit visibility
 
@@ -30,13 +30,13 @@ Audit trails are inconsistent or inaccessible
 
 As automation increases, accountability decreases.
 
-This creates a fundamental gap:
+**This creates a fundamental gap:**
 
 Systems are acting faster than humans can verify or understand their actions.
 
 **2. The AT1C Principle**
 
-AT1C introduces a single governing rule:
+**AT1C introduces a single governing rule:**
 
 No system may execute an action on behalf of a user without explicit approval and verifiable proof of consent.
 
@@ -96,13 +96,18 @@ The receipt is stored for later inspection.
 
 **5. Receipts (Audit Layer)**
 
-Every approved action generates a receipt containing:
+**Every approved action generates a receipt containing:**
 
 User ID
+
 Actor (application or AI)
+
 Action requested
+
 Approval status
+
 Timestamp
+
 Proof identifier
 
 Receipts form an append-only audit trail of intent and execution.
@@ -111,19 +116,21 @@ This introduces a new primitive:
 
 Verifiable consent history for digital systems.
 
-6. Identity
+**6. Identity**
 
 AT1C treats identity as a permission boundary for action.
 
-This enables:
+**This enables:**
 
 User-controlled identity ownership
+
 Portable identity across systems
+
 Consistent enforcement of consent rules
 
 **7. Cryptographic & Decentralised Future**
 
-While the current implementation is a lightweight prototype, AT1C is designed to evolve toward:
+**While the current implementation is a lightweight prototype, AT1C is designed to evolve toward:**
 
 Cryptographically signed approvals
 
@@ -173,13 +180,18 @@ This supports safe, scalable automation.
 
 **10. Current Implementation**
 
-AT1C currently exists as a working prototype featuring:
+**AT1C currently exists as a working prototype featuring:**
 
 TypeScript SDK
+
 CLI approval system
+
 Identity simulation layer
+
 Receipt generation and persistence
+
 Audit viewer
+
 Demo flows (login + AI agent approval)
 
 **11. Future Direction**
