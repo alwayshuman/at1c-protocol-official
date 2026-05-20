@@ -1,4 +1,4 @@
-Major AT1C milestone today.
+ **AT1C AI Agents Proof of Actions Verified**
 
 The SDK now supports:
 
@@ -12,7 +12,7 @@ The SDK now supports:
 Example flow:
 AI agent requests action → human approves → cryptographic receipt generated → receipt verification succeeds → tampered receipt fails verification.
 
-Finally got the TypeScript structure stabilized too 😅
+Finally got the TypeScript structure stabilized too 
 
 Feels great seeing the full loop working end-to-end.
 
@@ -177,7 +177,7 @@ This enables developers to build applications where actions are not just execute
 
 **AT1C** does the same for user approval.
 
-Instead of building complex identity and permission systems, developers can use AT1C to request, approve, and verify actions with a simple API.
+Instead of building complex identity and permission systems, developers use AT1C to request, approve, and verify actions with a simple API.
 
 Early-stage protocol. Open to ideas, feedback, and collaboration.
 
