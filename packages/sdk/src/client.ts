@@ -12,6 +12,10 @@ export class AT1C {
 private approvalLog: ApprovalReceipt[] = [];
   private apiKey: string;
 private seenReceipts = new Set<string>();
+private blockedActions = [
+  "delete_database",
+  "wire_money",
+];
 getApprovalLog(): ApprovalReceipt[] {
   return this.approvalLog;
 }
@@ -71,6 +75,11 @@ exportReceipts(path: string): void {
   // --------------------
   // PERMISSION CHECK
   // --------------------
+private isBlockedAction(
+  action: string
+): boolean {
+  return this.blockedActions.includes(action);
+}
   private checkPermission(userId: string, action: string): boolean {
     try {
       const raw = fs.readFileSync("agents.json", "utf-8");
@@ -176,6 +185,15 @@ async enforce(
   },
   fn: () => Promise<any> | any
 ): Promise<any> {
+if (this.isBlockedAction(config.action)) {console.log(
+  "🚫 Policy blocked action:",
+  config.action
+);
+  return {
+    status: "denied",
+    reason: "blocked_policy",
+  };
+}
     const allowed = this.checkPermission(config.userId, config.action);
 
     if (!allowed) {
