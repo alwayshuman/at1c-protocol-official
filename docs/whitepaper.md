@@ -166,7 +166,7 @@ AI systems become accountable
 
 **9. Human–AI Cooperation Model**
 
-AT1C enables structured collaboration:
+**AT1C enables structured collaboration:**
 
 Humans define intent
 
