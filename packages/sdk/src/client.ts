@@ -224,7 +224,8 @@ if (blockedPolicy) {
       };
     }
 
-    const approval = await this.approve(config);
+const approval: ApprovalReceipt =
+  await this.approve(config);
 this.approvalLog.push(approval);
 const valid = this.verifyApproval(approval, config);
 

@@ -13,15 +13,15 @@ async function run() {
 
   console.log("🧑 User:", user.userId)
   console.log("\n🤖 AI Agent wants to perform an action...\n")
-
-  const action = "Send email to boss: 'I quit my job' 😅"
+const action =
+  "AI wants to send an email on your behalf"
 
   console.log("⚠️  Action Requested:")
   console.log(action)
 const result = await at1c.enforce(
   {
     userId: "user_demo",
-    action: "wire_money",
+    action: "send_email",
     actor: "ai-agent",
     agentId: "agent_3678c68b"
   },
@@ -49,6 +49,7 @@ if (receipts.length > 0) {
     "Receipt verified:",
     verified
   );
+at1c.exportReceipts("receipts.json")
 
   latestReceipt.action =
     "tampered_action";
@@ -69,7 +70,6 @@ if (result.status === "approved") {
 } else {
   console.log("\n❌ Denied — AI blocked")
 }
-
 console.log("\n===================================")
 }
 

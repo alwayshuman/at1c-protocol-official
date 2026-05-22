@@ -1,28 +1,13 @@
 [
   {
-    "receiptId": "receipt_1777722546808",
-    "userId": "user_0en1ld",
-    "action": "Sign out",
-    "actor": "demo-app.com",
+    "receiptId": "92a085b4-8f39-4205-8b72-5e9df0faa4d7",
+    "receiptHash": "7ab03ffb3e49e4b820b4be323fceaa4e515fab38059a2292842e097830740725",
+    "version": "1.0",
     "status": "approved",
-    "timestamp": 1777722546808
-  },
-  {
-    "receiptId": "receipt_1778066584122",
-    "userId": "user_um1mzu",
-    "action": "Sign in",
-    "actor": "demo-app.com",
-    "status": "approved",
-    "timestamp": 1778066584122,
-    "signature": "18c31fb910d4cd664515ecdfecfb092cc87cf6bf9d7b9b6b781ec44ddcde4f3bf72e4e465982219eaa89d67edb9f003f590ff10aae185d3974638fca1bae8b0d"
-  },
-  {
-    "receiptId": "receipt_1778148412588",
     "userId": "user_demo",
-    "action": "Sign in",
-    "actor": "demo-app.com",
-    "status": "approved",
-    "timestamp": 1778148412588,
-    "signature": "cf0ff3bc71a2dec2879f8843c0e1e94e166b50691c013162d73e0582864aaf999df5cb3a62da0726a55d574d485bc387cc44cc92f3b9daee7e7e4c6c8d732f0c"
+    "agentId": "agent_3678c68b",
+    "action": "send_email",
+    "timestamp": "2026-05-22T08:27:08.176Z",
+    "signature": "8633643483e3ccb4a2a5b119be4a4c3b21d8704cae823b1dca719dca566bf2a1"
   }
 ]
