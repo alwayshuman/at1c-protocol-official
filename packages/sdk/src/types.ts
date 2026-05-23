@@ -7,5 +7,6 @@ export interface ApprovalReceipt {
   agentId: string;
   action: string;
   timestamp: string;
+  expiresAt: string;
   signature: string;
 }

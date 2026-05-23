@@ -25,9 +25,12 @@ getReceiptById(
     (receipt) => receipt.receiptId === receiptId
   );
 }
-verifyReceipt(
-  receipt: ApprovalReceipt
-): boolean {
+verifyReceipt(receipt: ApprovalReceipt): { valid: boolean; reason?: string } {
+const now = new Date();
+const expiresAt = new Date(receipt.expiresAt);
+if (now > expiresAt) {
+  return { valid: false, reason: "expired" };
+}
 const calculatedHash =
   hashReceipt({
     receiptId: receipt.receiptId,
@@ -42,11 +45,16 @@ const calculatedHash =
 
 // 🔴 REPLAY PROTECTION
 if (this.seenReceipts.has(receipt.receiptId)) {
-  return false;
+  return { valid: false, reason: "replay_detected" };
+}
+this.seenReceipts.add(receipt.receiptId);
+const valid = calculatedHash === receipt.receiptHash;
+
+if (!valid) {
+  return { valid: false, reason: "invalid_signature" };
 }
 
-this.seenReceipts.add(receipt.receiptId);
-return calculatedHash === receipt.receiptHash;
+return { valid: true };
 }
 exportReceipts(path: string): void {
   fs.writeFileSync(
@@ -156,6 +164,7 @@ const approval: ApprovalReceipt = {
   agentId: config.agentId,
   action: config.action,
   timestamp,
+  expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
   signature,
 };
 resolve(approval);
