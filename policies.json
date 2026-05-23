@@ -1,0 +1,14 @@
+[
+  {
+    "action": "delete_database",
+    "severity": "critical"
+  },
+  {
+    "action": "wire_money",
+    "severity": "high"
+  },
+  {
+    "action": "send_email",
+    "severity": "high"
+  }
+]
