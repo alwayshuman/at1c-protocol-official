@@ -44,11 +44,22 @@ if (receipts.length > 0) {
     at1c.verifyReceipt(
       latestReceipt
     );
+console.log(
+  "Receipt verification result:",
+  verified
+);
+const expiredReceipt = {
+  ...result.approval,
+  expiresAt: "2020-01-01T00:00:00.000Z",
+};
 
-  console.log(
-    "Receipt verified:",
-    verified
-  );
+const expiredVerified =
+  at1c.verifyReceipt(expiredReceipt);
+
+console.log(
+  "Expired receipt verification result:",
+  expiredVerified
+);
 at1c.exportReceipts("receipts.json")
 
   latestReceipt.action =
@@ -58,11 +69,10 @@ at1c.exportReceipts("receipts.json")
     at1c.verifyReceipt(
       latestReceipt
     );
-
-  console.log(
-    "Tampered receipt verified:",
-    tamperedVerified
-  );
+console.log(
+  "Tampered receipt verification result:",
+  tamperedVerified
+);
 }
 if (result.status === "approved") {
   console.log("\n✅ Approved — AI executes action")

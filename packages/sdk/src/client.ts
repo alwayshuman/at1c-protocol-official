@@ -200,8 +200,13 @@ const blockedPolicy =
     (policy: any) =>
       policy.action === config.action
   );
-
-if (blockedPolicy) {
+if (
+  blockedPolicy &&
+  (
+    blockedPolicy.severity === "high" ||
+    blockedPolicy.severity === "critical"
+  )
+) {
   console.log(
     "🚫 Policy blocked action:",
     config.action
