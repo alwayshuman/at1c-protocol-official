@@ -1,4 +1,5 @@
-  **AT1C Protocol AI Agentic Registry Verified Accountability**
+  **AT1C Protocol AI Agentic 
+    Verified Accountability**
 
 **Make every AI action accountable to a human—by default.**
 
