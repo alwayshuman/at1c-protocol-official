@@ -249,7 +249,33 @@ if (!valid) {
         approval,
       };
     }
+const receipt = {
+  userId: config.userId,
+  agentId: config.agentId || "unknown",
+  action: config.action,
+  timestamp: approval.timestamp,
+  signature: approval.signature,
+  approvalStatus: approval.status,
+};
 
+let receipts = [];
+
+try {
+  if (fs.existsSync("receipts.json")) {
+    receipts = JSON.parse(
+      fs.readFileSync("receipts.json", "utf-8")
+    );
+  }
+} catch (err) {
+  receipts = [];
+}
+
+receipts.push(receipt);
+
+fs.writeFileSync(
+  "receipts.json",
+  JSON.stringify(receipts, null, 2)
+);
     const result = await fn();
 
     return {

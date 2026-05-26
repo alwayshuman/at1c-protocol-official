@@ -1,14 +1,14 @@
 [
   {
-    "receiptId": "0242ee1c-c6a8-4479-aa5c-de8b35f1a8a1",
-    "receiptHash": "cb88a7b4c2234a6795336e5cfb2b62efa3778440c9cccdd0edace142d551c7a1",
+    "receiptId": "34d67425-6d37-4f4f-a9f8-acab60f33882",
+    "receiptHash": "a0fe4e39f8380370bf477ff380ba0ed5d4517b1b6092b5020541df920eb90666",
     "version": "1.0",
     "status": "approved",
     "userId": "user_demo",
     "agentId": "agent_3678c68b",
     "action": "send_email",
-    "timestamp": "2026-05-24T07:01:02.290Z",
-    "expiresAt": "2026-05-24T07:06:02.293Z",
-    "signature": "9620ae6c69a98580cd2bd90a92b9de0425f2f2feb0cfee97736c2a526c33cf6d"
+    "timestamp": "2026-05-26T06:44:26.422Z",
+    "expiresAt": "2026-05-26T06:49:26.426Z",
+    "signature": "953c7a1b4e6b38e0d355d29901bd33cb227869b5be9be26439ae278d56c575e1"
   }
 ]
