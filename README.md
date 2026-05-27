@@ -1,27 +1,62 @@
-  **AT1C Protocol AI Agentic 
-    Verified Accountability**
+🔐 AT1C Protocol
+AI Agentic Verified Accountability Layer
 
-**Make every AI action accountable to a human—by default.**
+Make every AI action accountable to a human — by default.
 
-Verifiable approval for human and AI actions
+Verifiable approval for human and AI actions.
 
-Nothing can act on behalf of a user without their approval—and that approval can be proven.
+Nothing can act on behalf of a user without their approval — and that approval must be provable.
 
-**Why this matters**
+Why AT1C Exists
 
- [Read the Whitepaper](docs/whitepaper.md)
+Modern systems operate on implicit trust:
 
-**The approval layer for AI agents and user-controlled identity**
+Apps act on behalf of users silently
+AI agents execute actions without oversight
+Identity is fragmented and platform-controlled
 
-                         AT1C Protocol README
+This leads to:
 
+automation without accountability
+unclear responsibility for actions
+unverifiable agent behavior
+AT1C Core Idea
 
----
-  How it works
+AT1C introduces a simple rule:
 
-Request → Approve → Proof → Verify
- Quick Example
+No action is valid unless backed by verifiable human approval.
 
+This becomes a universal authorization layer for:
+
+AI agents
+applications
+services
+automated systems
+Core Primitive
+request → approve → proof → verify
+How It Works
+1. Request
+
+A system or AI agent requests permission to perform an action.
+
+2. Approve
+
+A human explicitly approves or denies the request.
+
+3. Proof
+
+A cryptographic receipt is generated binding:
+
+user identity
+action
+context
+timestamp
+nonce
+4. Verify
+
+Any system can independently verify the proof before execution.
+
+Quick Example (SDK)
 const user = await at1c.identify()
 
 const approval = await at1c.request({
@@ -34,139 +69,187 @@ await at1c.approve(approval)
 
 const proof = await at1c.getProof(approval)
 
-// Any system can verify this
+// Any system can verify
 await at1c.verify(proof)
+What This Enables
+Safe AI agents (cannot act without permission)
+Consent-based authentication (beyond passwords)
+Auditable digital actions (who approved what, when)
+Human-in-the-loop automation
+Verifiable system-to-system execution
+The AT1C Solution
 
- The Problem
+AT1C introduces a control layer:
 
-**Today’s systems act on implicit trust:**
+User-controlled identity
+Explicit approval before execution
+Verifiable cryptographic proof of consent
+AI agents gated by human intent
 
-Apps act on behalf of users silently
+AT1C doesn’t replace existing systems — it wraps them with accountability.
 
-AI agents execute without oversight
+📜 Protocol Specification (AT1C v0.1)
 
-Identity is fragmented and platform-controlled
+AT1C is a lightweight authorization protocol for autonomous systems.
 
-**This leads to:**
+It defines how AI and software systems can act only after producing verifiable proof of human approval.
 
-Automation without accountability
+Core Principle
 
- The AT1C Solution
+All actions MUST satisfy:
 
-**AT1C introduces a new primitive:**
+1. Explicit Approval
 
-No action is valid unless backed by verifiable user approval
+Approval is intentionally granted by a human authority.
 
-**It adds a simple control layer:**
+2. Bound Context
 
- User-controlled identity
+Approval is tied to:
 
- Explicit approval before any action
+action
+actor
+resource
+execution scope
+3. Verifiable Proof
 
+Approval produces cryptographic proof that can be independently verified.
 
- Verifiable proof of consent
+Core Flow
+request → approve → proof → verify
+Entities
+User (Human Principal)
+Root authority
+Grants approval
+Controls identity and permissions
+Agent
+AI or system acting on behalf of user
+Cannot self-authorize
+Approver
+Human or policy system
+Grants or denies requests
+Receipt
+Cryptographic proof of approval
+Signed authorization artifact
+Verifier
+Validates receipts before execution
+Executor
+Performs action only after verification
+Receipt Structure
+{
+  "id": "uuid",
+  "actor": "ai_agent",
+  "action": "post_content",
+  "resource": "user://social_account",
+  "payloadHash": "sha256:abc123",
+  "approvedBy": "user",
+  "timestamp": 1740000000,
+  "expiresAt": 1740003600,
+  "nonce": "random",
+  "signature": "ed25519:..."
+}
+Verification Rules
 
- AI agents gated by human intent
+A receipt is valid only if:
 
-  ** AT1C doesn’t replace existing systems—it wraps them with accountability**
+signature is valid
+payload is unchanged
+nonce is unused (replay protection)
+timestamp is valid
+scope matches requested action
+Core Safety Rules
+Rule 1 — No Implicit Authority
 
- Try It (30 seconds)
+No system may act without explicit approval or scoped permission.
 
-**Right now someone might wonder** “how do I get at1c?”
+Rule 2 — Context Binding
 
-Clone and run:
+Approval is valid only for its exact action + resource.
 
+Rule 3 — Proof Integrity
+
+Receipts must be tamper-evident and independently verifiable.
+
+Rule 4 — Verification Before Execution
+
+All actions must be verified before execution.
+
+Rule 5 — Replay Protection
+
+Receipts cannot be reused.
+
+Replay Protection
+
+AT1C uses nonce-based tracking to prevent reuse of approvals.
+
+Each receipt is single-use unless explicitly defined otherwise.
+
+Identity Model
+Identity is user-controlled
+Identity is portable across systems
+AT1C does not enforce identity providers
+Cryptographic Requirements
+
+Implementations must provide:
+
+secure digital signatures
+collision-resistant hashing
+timestamp integrity
+
+Optional:
+
+zero-knowledge proofs
+hardware-backed keys
+post-quantum signatures
+SDK Surface
+createRequest()
+approveRequest()
+signReceipt()
+verifyReceipt()
+detectReplay()
+storeReceipt()
+Try It (30 seconds)
 git clone https://github.com/alwayshuman/at1c.git
 cd at1c
 npx ts-node --compiler-options '{"module":"CommonJS"}' examples/login-demo/index.ts
-
- Demo 1 — Sign in with AT1C
-
-User is identified
-Approval is requested
-Access granted only after consent
-npx ts-node --compiler-options '{"module":"CommonJS"}' examples/login-demo/index.ts
-
- Demo 2 — AI Agent Approval
-
+Demo 1 — Identity + Approval
+user identified
+approval requested
+access granted only after consent
+Demo 2 — AI Agent Approval
 AI requests permission
-User approves or denies
-Action is controlled by the user
-npx ts-node --compiler-options '{"module":"CommonJS"}' examples/ai-agent-demo/index.ts
+user approves or denies
+execution is gated by approval
+Documentation
+Protocol Spec:
+https://github.com/alwayshuman/at1c/blob/main/docs/protocol.md
+Whitepaper:
+https://github.com/alwayshuman/at1c/blob/main/docs/whitepaper.md
+Vision
 
- Documentation
-
- **AT1C Protocol**
- 
- https://github.com/alwayshuman/at1c/blob/main/docs/protocol.md
- 
- **AT1C Whitepaper**
-
- https://github.com/alwayshuman/at1c/blob/main/docs/whitepaper.md
-
- Core Concept
-
-**AT1C introduces a simple rule:**
-
-Nothing acts on behalf of a user without explicit approval
-
-Upgraded with:
-
-**Every approval is verifiable**
-
- What This Enables
-
-Safe AI agents (cannot act without permission)
-
-Consent-based authentication (beyond passwords)
-
-Auditable digital actions (who approved what, when)
-
-Human-in-the-loop automation
-
- Vision
-
-**AT1C can become the standard layer for:**
+AT1C can become the standard authorization layer for:
 
 AI safety & accountability
-
-Secure identity flows
-
-Permission-based automation
-
-Verifiable digital actions
-
- Project Structure
-
+permission-based automation
+verifiable digital systems
+identity-controlled execution
+Project Structure
 at1c/
-├── docs/          # Protocol + whitepaper
-├── packages/      # SDK
-├── examples/      # Demos
- Contributing
+ ├── docs/        # protocol + whitepaper
+ ├── packages/    # SDK
+ ├── examples/    # demos
+Closing Principle
 
-AT1C is a lightweight approval layer that ensures all actions performed on behalf of a user are explicitly authorized and verifiable.
+AI systems should be able to prove they were authorized to act.
 
-Core flow:
+Summary
 
-1. A system requests permission to act
-2. The user approves or denies
-3. A proof of approval is generated
-4. Any system can verify that proof
+AT1C defines a minimal rule:
 
-This enables developers to build applications where actions are not just executed—but accountable.
-
-**Stripe** made payments simple for developers.
-
-**AT1C** does the same for user approval.
-
-Instead of building complex identity and permission systems, developers use AT1C to request, approve, and verify actions with a simple API.
-
-Early-stage protocol. Open to ideas, feedback, and collaboration.
-
-📜 License
+Actions require approval.
+Approval produces proof.
+Proof enables verification.
+License
 
 MIT
 
 A.Human
-
-
