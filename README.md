@@ -207,14 +207,20 @@ signReceipt()
 verifyReceipt()
 detectReplay()
 storeReceipt()
+
 Try It (30 seconds)
-git clone https://github.com/alwayshuman/at1c.git
+git clone
+
+https://github.com/alwayshuman/at1c.git
 cd at1c
+
 npx ts-node --compiler-options '{"module":"CommonJS"}' examples/login-demo/index.ts
+
 Demo 1 — Identity + Approval
 user identified
 approval requested
 access granted only after consent
+
 Demo 2 — AI Agent Approval
 AI requests permission
 user approves or denies
