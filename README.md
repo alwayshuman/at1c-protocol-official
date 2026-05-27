@@ -222,8 +222,10 @@ execution is gated by approval
 Documentation
 Protocol Spec:
 https://github.com/alwayshuman/at1c-protocol-official/blob/main/docs/protocol.md
+
 Whitepaper:
 https://github.com/alwayshuman/at1c/blob/main/docs/whitepaper.md
+
 Vision
 
 AT1C can become the standard authorization layer for:
