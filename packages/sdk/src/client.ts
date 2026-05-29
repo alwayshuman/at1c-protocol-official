@@ -200,6 +200,13 @@ const blockedPolicy =
     (policy: any) =>
       policy.action === config.action
   );
+// AT1C INVARIANT: fail-closed by default
+if (!this.blockedActions) {
+  return {
+    status: "denied",
+    reason: "policy_engine_unavailable",
+  };
+}
 if (
   blockedPolicy &&
   (
