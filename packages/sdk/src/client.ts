@@ -2,6 +2,11 @@ const fs = require("fs");
 const readline = require("readline");
 const crypto = require("crypto");
 import { ApprovalReceipt } from "./types";
+enum PolicyDecision {
+  ALLOW = "allow",
+  REQUIRE_APPROVAL = "require_approval",
+  DENY = "deny",
+}
 import {
   createApprovalPayload,
   createApprovalSignature,
@@ -224,20 +229,21 @@ if (
     blockedPolicy.severity
   );
 
-  return {
-    status: "denied",
-    reason: "blocked_policy",
-  };
+const decision = PolicyDecision.DENY;
+
+return {
+  status: decision,
+  reason: "blocked_policy",
+};
 }
     const allowed = this.checkPermission(config.userId, config.action);
 
-    if (!allowed) {
-      return {
-        status: "denied",
-        reason: "permission_denied",
-      };
-    }
-
+if (!allowed) {
+  return {
+    status: "denied",
+    reason: "permission_denied",
+  };
+}
 const approval: ApprovalReceipt =
   await this.approve(config);
 this.approvalLog.push(approval);
