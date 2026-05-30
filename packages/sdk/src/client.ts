@@ -87,10 +87,10 @@ exportReceipts(path: string): void {
   // --------------------
   // PERMISSION CHECK
   // --------------------
-private isBlockedAction(
+private getPolicy(
   action: string
-): boolean {
-  return this.blockedActions.some(
+): any {
+  return this.blockedActions.find(
     (policy: any) => policy.action === action
   );
 }
