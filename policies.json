@@ -1,14 +1,17 @@
 [
   {
     "action": "delete_database",
-    "severity": "critical"
+    "severity": "critical",
+    "decision": "deny"
   },
   {
     "action": "wire_money",
-    "severity": "high"
+    "severity": "high",
+    "decision": "require_approval"
   },
   {
     "action": "send_email",
-    "severity": "low"
+    "severity": "low",
+    "decision": "allow"
   }
 ]
