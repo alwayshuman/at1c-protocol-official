@@ -201,10 +201,7 @@ async enforce(
   fn: () => Promise<any> | any
 ): Promise<any> {
 const blockedPolicy =
-  this.blockedActions.find(
-    (policy: any) =>
-      policy.action === config.action
-  );
+this.getPolicy(config.action);
 // AT1C INVARIANT: fail-closed by default
 if (!this.blockedActions) {
   return {
@@ -214,10 +211,7 @@ if (!this.blockedActions) {
 }
 if (
   blockedPolicy &&
-  (
-    blockedPolicy.severity === "high" ||
-    blockedPolicy.severity === "critical"
-  )
+  blockedPolicy.decision === "deny"
 ) {
   console.log(
     "🚫 Policy blocked action:",
@@ -225,17 +219,14 @@ if (
   );
 
   console.log(
-    "⚠️ Severity:",
-    blockedPolicy.severity
+    "⚠️ Decision: deny"
   );
 
-const decision = PolicyDecision.DENY;
-
-return {
-  status: decision,
-  reason: "blocked_policy",
-};
-}
+  return {
+    status: "denied",
+    reason: "blocked_policy",
+  };
+  }
     const allowed = this.checkPermission(config.userId, config.action);
 
 if (!allowed) {
