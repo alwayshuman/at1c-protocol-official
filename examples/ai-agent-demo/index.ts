@@ -1,87 +1,33 @@
-import { AT1C } from "../../packages/sdk/src/client"
+import { AT1C } from '../../packages/sdk/src/client'
+import { verifyReceipt } from '../../packages/sdk/src/crypto'
 
-async function run() {
-  const at1c = new AT1C({ apiKey: "demo_key" })
+async function main() {
+  const at1c = new AT1C()
 
-  console.clear()
+  console.log('\n🤖 AT1C AI Agent Demo')
+  console.log('Public Key:', at1c.getPublicKey())
 
-  console.log("===================================")
-  console.log("🤖 AI Agent Demo")
-  console.log("===================================\n")
+  const result = await at1c.enforce(
+    {
+      userId: 'user_demo',
+      agentId: 'agent_001',
+      action: 'send_email',
+    },
+    async () => {
+      console.log('✅ Sending email...')
+      return { sent: true }
+    }
+  )
 
-  const user = await at1c.identify()
+  console.log('\n📋 Result:', result.status)
 
-  console.log("🧑 User:", user.userId)
-  console.log("\n🤖 AI Agent wants to perform an action...\n")
-const action =
-  "AI wants to send an email on your behalf"
-
-  console.log("⚠️  Action Requested:")
-  console.log(action)
-const result = await at1c.enforce(
-  {
-    userId: "user_demo",
-    action: "send_email",
-    actor: "ai-agent",
-    agentId: "agent_3678c68b"
-  },
-  async () => {
-    return {
-      message: "Email sent (simulated)"
+  if (result.status === 'approved') {
+    const check = verifyReceipt(result.receipt)
+    console.log('🔐 Receipt valid:', check.valid)
+    if (!check.valid) {
+      console.log('❌ Reason:', check.reason)
     }
   }
-)
-console.log("\n📦 Result:")
-console.log(result)
-const receipts =
-  at1c.getApprovalLog();
-
-if (receipts.length > 0) {
-  const latestReceipt =
-    receipts[receipts.length - 1];
-
-  const verified =
-    at1c.verifyReceipt(
-      latestReceipt
-    );
-console.log(
-  "Receipt verification result:",
-  verified
-);
-const expiredReceipt = {
-  ...result.approval,
-  expiresAt: "2020-01-01T00:00:00.000Z",
-};
-
-const expiredVerified =
-  at1c.verifyReceipt(expiredReceipt);
-
-console.log(
-  "Expired receipt verification result:",
-  expiredVerified
-);
-at1c.exportReceipts("receipts.json")
-
-  latestReceipt.action =
-    "tampered_action";
-
-  const tamperedVerified =
-    at1c.verifyReceipt(
-      latestReceipt
-    );
-console.log(
-  "Tampered receipt verification result:",
-  tamperedVerified
-);
-}
-if (result.status === "approved") {
-  console.log("\n✅ Approved — AI executes action")
-  console.log("📨 Email sent (simulated)")
-} else {
-  console.log("\n❌ Denied — AI blocked")
-}
-console.log("\n===================================")
 }
 
-run()
-
+main().catch(console.error)

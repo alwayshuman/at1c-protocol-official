@@ -1,49 +1,33 @@
-import { AT1C } from "../../packages/sdk/src/client"
+import { AT1C } from '../../packages/sdk/src/client'
+import { verifyReceipt } from '../../packages/sdk/src/crypto'
 
 async function main() {
+  const at1c = new AT1C()
 
-  console.log("\n===================================")
-  console.log("🌐 demo-app.com")
-  console.log("===================================\n")
+  console.log('\n🔐 AT1C Login Demo')
+  console.log('Public Key:', at1c.getPublicKey())
 
-  console.log("🔘 [ Sign in with AT1C ]\n")
-
-  const at1c = new AT1C({
-    apiKey: "demo_key"
-  })
-
-  console.log("👉 User clicked 'Sign in with AT1C'\n")
-
-  // ALWAYS use persistent identity
-  const user = await at1c.identify()
-
-  console.log("🧑 Identified:", user.userId)
-
-  console.log("\n📲 Sending approval request to user...\n")
-
-  // Protected action
   const result = await at1c.enforce(
     {
-      userId: user.userId,
-      action: "Sign in",
-      actor: "demo-app.com"
+      userId: 'user_demo',
+      agentId: 'login_agent',
+      action: 'login',
     },
-
     async () => {
-      return {
-        success: true,
-        sessionToken: "session_abc123"
-      }
+      console.log('✅ Login action executed')
+      return { loggedIn: true }
     }
   )
 
-  console.log("\n🔐 Result:", result)
+  console.log('\n📋 Result:', result.status)
 
-  if (result.status === "approved") {
-    console.log("\n✅ Login approved")
-  } else {
-    console.log("\n❌ Login denied")
+  if (result.status === 'approved') {
+    const check = verifyReceipt(result.receipt)
+    console.log('🔐 Receipt valid:', check.valid)
+    if (!check.valid) {
+      console.log('❌ Reason:', check.reason)
+    }
   }
 }
 
-main()
+main().catch(console.error)
