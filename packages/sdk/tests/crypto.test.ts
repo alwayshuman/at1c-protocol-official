@@ -17,6 +17,7 @@ function makePayload(overrides: Partial<ReceiptPayload> = {}): ReceiptPayload {
   const now = new Date()
   return {
     receiptId: 'test-receipt-001',
+    nonce: 'test-nonce-001',
     version: '1.0',
     status: 'approved',
     userId: 'user_test',
@@ -56,6 +57,7 @@ describe('canonicalise', () => {
       expiresAt: payload.expiresAt,
       action: payload.action,
       receiptId: payload.receiptId,
+      nonce: payload.nonce,
       agentId: payload.agentId,
       status: payload.status,
       timestamp: payload.timestamp,

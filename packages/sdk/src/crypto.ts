@@ -10,6 +10,7 @@ export interface KeyPair {
 
 export interface ReceiptPayload {
   receiptId: string
+  nonce: string
   version: string
   status: 'approved' | 'denied'
   userId: string
@@ -85,6 +86,7 @@ export function verifyReceipt(receipt: SignedReceipt): VerifyResult {
   try {
     const payload: ReceiptPayload = {
       receiptId: receipt.receiptId,
+      nonce: receipt.nonce,
       version: receipt.version,
       status: receipt.status,
       userId: receipt.userId,
@@ -120,6 +122,7 @@ export function buildReceipt(
   const ttl = config.ttlSeconds ?? 300
   const payload: ReceiptPayload = {
     receiptId: crypto.randomUUID(),
+    nonce: crypto.randomUUID(),
     version: '1.0',
     status: config.status,
     userId: config.userId,
