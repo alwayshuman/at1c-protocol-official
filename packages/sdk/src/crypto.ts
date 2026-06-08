@@ -2,7 +2,7 @@ import * as ed from '@noble/ed25519'
 import { sha512 } from '@noble/hashes/sha2.js'
 
 ed.hashes.sha512 = sha512
-
+const _usedNonces = new Set<string>()
 export interface KeyPair {
   secretKey: Uint8Array
   publicKey: Uint8Array
@@ -105,6 +105,8 @@ export function verifyReceipt(receipt: SignedReceipt): VerifyResult {
   } catch {
     return { valid: false, reason: 'malformed_receipt' }
   }
+ if (_usedNonces.has(receipt.nonce)) return { valid: false, reason: 'replay_detected' }
+  _usedNonces.add(receipt.nonce)  
   return { valid: true }
 }
 

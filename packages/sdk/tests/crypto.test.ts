@@ -175,3 +175,17 @@ describe('buildReceipt', () => {
     expect(diff).toBe(60_000)
   })
 })
+describe('replay protection', () => {
+  it('blocks a receipt used twice', () => {
+    const keys = generateKeyPair()
+    const receipt = buildReceipt(
+      { userId: 'user_1', agentId: 'agent_1', action: 'test', status: 'approved' },
+      keys.secretKey
+    )
+    const first = verifyReceipt(receipt)
+    const second = verifyReceipt(receipt)
+    expect(first.valid).toBe(true)
+    expect(second.valid).toBe(false)
+    expect(second.reason).toBe('replay_detected')
+  })
+})
