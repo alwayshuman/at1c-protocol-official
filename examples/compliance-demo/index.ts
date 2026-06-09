@@ -65,3 +65,4 @@ const report = [
 fs.writeFileSync('compliance-report.txt', report)
 console.log()
 console.log('📄 Report saved to compliance-report.txt')
+console.log('')
