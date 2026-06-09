@@ -590,5 +590,5 @@ user-controlled authorization
 verifiable digital interactions
 cryptographic accountability for AI systems
 
-AT1C Protocol Specification V 0.4
+AT1C Protocol Specification  v0.1
 A. Human
