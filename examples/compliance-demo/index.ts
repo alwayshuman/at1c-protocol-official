@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import { generateKeyPair, buildReceipt, verifyReceipt } from '../../packages/sdk/src/crypto'
 
 const keys = generateKeyPair()
@@ -37,6 +38,30 @@ console.log(`Signature   : ${receipt.signature.slice(0, 32)}...`)
 console.log()
 
 const result = verifyReceipt(receipt)
+
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 console.log(`VERIFICATION: ${result.valid ? '✅ VALID — Cryptographically proven' : '❌ INVALID — ' + result.reason}`)
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+
+const report = [
+  '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+  '        AT1C COMPLIANCE REPORT            ',
+  '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+  `Receipt ID  : ${receipt.receiptId}`,
+  `Nonce       : ${receipt.nonce}`,
+  `User        : ${receipt.userId}`,
+  `Agent       : ${receipt.agentId}`,
+  `Action      : ${receipt.action}`,
+  `Status      : ${receipt.status}`,
+  `Approved at : ${receipt.timestamp}`,
+  `Expires at  : ${receipt.expiresAt}`,
+  `Signature   : ${receipt.signature}`,
+  '',
+  `VERIFICATION: ${result.valid ? 'VALID — Cryptographically proven' : 'INVALID — ' + result.reason}`,
+  '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+  `Generated   : ${new Date().toISOString()}`,
+].join('\n')
+
+fs.writeFileSync('compliance-report.txt', report)
+console.log()
+console.log('📄 Report saved to compliance-report.txt')
