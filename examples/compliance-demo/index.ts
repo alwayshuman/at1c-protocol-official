@@ -1,5 +1,9 @@
 import * as fs from 'fs'
+import * as path from 'path'
+import { execSync } from 'child_process'
 import { generateKeyPair, buildReceipt, verifyReceipt } from '../../packages/sdk/src/crypto'
+
+const wantPdf = process.argv.includes('--pdf')
 
 const keys = generateKeyPair()
 
@@ -43,26 +47,47 @@ console.log('━━━━━━━━━━━━━━━━━━━━━━�
 console.log(`VERIFICATION: ${result.valid ? '✅ VALID — Cryptographically proven' : '❌ INVALID — ' + result.reason}`)
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
-const report = [
-  '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-  '        AT1C COMPLIANCE REPORT            ',
-  '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-  `Receipt ID  : ${receipt.receiptId}`,
-  `Nonce       : ${receipt.nonce}`,
-  `User        : ${receipt.userId}`,
-  `Agent       : ${receipt.agentId}`,
-  `Action      : ${receipt.action}`,
-  `Status      : ${receipt.status}`,
-  `Approved at : ${receipt.timestamp}`,
-  `Expires at  : ${receipt.expiresAt}`,
-  `Signature   : ${receipt.signature}`,
-  '',
-  `VERIFICATION: ${result.valid ? 'VALID — Cryptographically proven' : 'INVALID — ' + result.reason}`,
-  '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-  `Generated   : ${new Date().toISOString()}`,
-].join('\n')
-
-fs.writeFileSync('compliance-report.txt', report)
-console.log()
-console.log('📄 Report saved to compliance-report.txt')
-console.log('')
+if (wantPdf) {
+  const outputPath = path.join(process.cwd(), 'compliance-report.pdf')
+  const scriptPath = path.join(__dirname, 'generate-compliance-pdf.py')
+  const payload = JSON.stringify({
+    receiptId:  receipt.receiptId,
+    nonce:      receipt.nonce,
+    userId:     receipt.userId,
+    agentId:    receipt.agentId,
+    action:     receipt.action,
+    status:     receipt.status,
+    timestamp:  receipt.timestamp,
+    expiresAt:  receipt.expiresAt,
+    signature:  receipt.signature,
+    valid:      result.valid,
+    reason:     result.valid ? undefined : result.reason,
+  }).replace(/'/g, "'\''")
+  console.log()
+  console.log('📄 Generating PDF compliance report...')
+  execSync(`python3 "${scriptPath}" "${outputPath}" '${payload}'`, { stdio: 'inherit' })
+  console.log('✅ PDF report saved to compliance-report.pdf')
+} else {
+  const lines = [
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    '        AT1C COMPLIANCE REPORT            ',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `Receipt ID  : ${receipt.receiptId}`,
+    `Nonce       : ${receipt.nonce}`,
+    `User        : ${receipt.userId}`,
+    `Agent       : ${receipt.agentId}`,
+    `Action      : ${receipt.action}`,
+    `Status      : ${receipt.status}`,
+    `Approved at : ${receipt.timestamp}`,
+    `Expires at  : ${receipt.expiresAt}`,
+    `Signature   : ${receipt.signature}`,
+    '',
+    `VERIFICATION: ${result.valid ? 'VALID — Cryptographically proven' : 'INVALID — ' + result.reason}`,
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `Generated   : ${new Date().toISOString()}`,
+    '',
+  ]
+  fs.writeFileSync('compliance-report.txt', lines.join('\n'))
+  console.log()
+  console.log('📄 Report saved to compliance-report.txt')
+}

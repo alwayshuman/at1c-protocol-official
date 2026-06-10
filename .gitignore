@@ -14,3 +14,7 @@ node_modules/
 # Test / local scripts (optional)
 testSignature.js
 generateKeys.js
+
+# AT1C generated compliance artefacts
+compliance-report.txt
+compliance-report.pdf
