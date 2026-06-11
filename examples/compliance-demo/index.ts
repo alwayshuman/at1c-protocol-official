@@ -67,6 +67,26 @@ if (wantPdf) {
   console.log('📄 Generating PDF compliance report...')
   execSync(`python3 "${scriptPath}" "${outputPath}" '${payload}'`, { stdio: 'inherit' })
   console.log('✅ PDF report saved to compliance-report.pdf')
+} else if (process.argv.includes('--html')) {
+  const outputPath = path.join(process.cwd(), 'compliance-report.html')
+  const scriptPath = path.join(__dirname, 'generate-compliance-html.py')
+  const payload = JSON.stringify({
+    receiptId:  receipt.receiptId,
+    nonce:      receipt.nonce,
+    userId:     receipt.userId,
+    agentId:    receipt.agentId,
+    action:     receipt.action,
+    status:     receipt.status,
+    timestamp:  receipt.timestamp,
+    expiresAt:  receipt.expiresAt,
+    signature:  receipt.signature,
+    valid:      result.valid,
+    reason:     result.valid ? undefined : result.reason,
+  }).replace(/'/g, "'\\''")
+  console.log()
+  console.log('🌐 Generating HTML compliance report...')
+  execSync(`python3 "${scriptPath}" "${outputPath}" '${payload}'`, { stdio: 'inherit' })
+  console.log('✅ HTML report saved to compliance-report.html')
 } else {
   const lines = [
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
