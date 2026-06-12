@@ -182,7 +182,7 @@ function listAgents() {
     console.log(`      Tier        : ${a.tier || 'standard'}`)
     console.log(`      Permissions : ${(a.permissions || []).join(', ')}`)
     console.log(`      Status      : ${status}`)
-    console.log(`      Expires     : ${new Date(a.expiresAt).toISOString()}`)
+    console.log(`      Expires     : ${a.expiresAt ? new Date(a.expiresAt).toISOString() : "legacy — no expiry set"}`)
   })
   console.log('\n' + '─'.repeat(42) + '\n')
 }
