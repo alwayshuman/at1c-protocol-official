@@ -18,3 +18,4 @@ generateKeys.js
 # AT1C generated compliance artefacts
 compliance-report.txt
 compliance-report.pdf
+.at1c_registry_key.json
