@@ -1,7 +1,7 @@
 import * as ed from '@noble/ed25519'
 import { sha512 } from '@noble/hashes/sha2.js'
 
-ed.hashes.sha512 = sha512
+ed.etc.sha512Sync = sha512
 const _usedNonces = new Set<string>()
 export interface KeyPair {
   secretKey: Uint8Array
@@ -26,7 +26,9 @@ export interface SignedReceipt extends ReceiptPayload {
 }
 
 export function generateKeyPair(): KeyPair {
-  return ed.keygen()
+  const secret = require("crypto").randomBytes(32)
+  const publicKey = ed.getPublicKey(secret)
+  return { secretKey: secret, publicKey }
 }
 
 export function publicKeyToHex(publicKey: Uint8Array): string {
