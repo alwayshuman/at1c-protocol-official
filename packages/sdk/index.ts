@@ -1,16 +1,58 @@
-const crypto = require("crypto")
+/**
+ * AT1C Protocol SDK
+ * AI Transparency & Compliance — v1.0
+ *
+ * No action without consent. No consent without proof.
+ *
+ * @example
+ * ```typescript
+ * import { AT1C, buildReceipt, verifyReceipt, generateKeyPair } from '@at1c/sdk'
+ *
+ * const at1c = new AT1C()
+ *
+ * const result = await at1c.enforce(
+ *   { userId: 'user_123', agentId: 'agent_payments', action: 'send_payment' },
+ *   async () => sendPayment()
+ * )
+ *
+ * if (result.status === 'approved') {
+ *   console.log('Receipt ID:', result.receipt.receiptId)
+ * }
+ * ```
+ */
 
-export class SDK {
+// ── Core client ───────────────────────────────────────────────────────────────
+export { AT1C } from './src/client'
 
-  async getProof(): Promise<any> {
-    return {
-      proof: crypto.randomBytes(32).toString("hex")
-    }
-  }
+// ── Crypto primitives ─────────────────────────────────────────────────────────
+export {
+  generateKeyPair,
+  buildReceipt,
+  signReceipt,
+  verifyReceipt,
+  canonicalise,
+  publicKeyToHex,
+  secretKeyToHex,
+  hexToPublicKey,
+  hexToSecretKey,
+} from './src/crypto'
 
-  async verify(proof: any): Promise<boolean> {
-    if (!proof || !proof.signature) return false
-    return proof.signature.startsWith("mock-signature")
-  }
+// ── Key management ────────────────────────────────────────────────────────────
+export {
+  saveKeyPair,
+  loadKeyPair,
+  loadOrCreateKeyPair,
+  getPublicKeyFromFile,
+} from './src/keys'
 
-}
+// ── Types — everything a consumer needs to type their integration ─────────────
+export type { ApprovalReceipt } from './src/types'
+
+export type {
+  KeyPair,
+  ReceiptPayload,
+  SignedReceipt,
+  VerifyResult,
+} from './src/crypto'
+
+export type { StoredKeyPair } from './src/keys'
