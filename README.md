@@ -71,6 +71,32 @@ Targeted at: fintech, health, and legal sectors.
 
 Protocol Spec: https://github.com/alwayshuman/at1c-protocol-official/blob/main/docs/protocol.md
 
+## Known Limitations & Roadmap
+
+AT1C v1.0 is the protocol and SDK foundation. The following are known
+gaps being addressed in upcoming releases:
+
+- **Agent key custody (planned for v1.1)** — the current agent registrar
+  (`register-agent.js`) generates and stores agent keypairs server-side.
+  This will move to a public-key-only registration model, where agents
+  generate their own keypairs locally and the registry only ever sees
+  and signs over the public key. This makes agent registration
+  non-custodial, consistent with AT1C's user-controlled identity model.
+
+- **End-user onboarding (planned)** — a passkey-based (WebAuthn/FIDO2)
+  flow for non-technical users, so no keys are ever visible to or
+  managed by the user. The signing key lives on the user's device,
+  unlocked by Face ID / fingerprint — AT1C never holds it.
+
+- **Receipt storage (planned, opt-in add-on)** — currently receipts are
+  stored locally in `receipts.json`. Hosted, long-term (10-year) receipt
+  storage with explicit opt-in consent is planned as an optional paid
+  tier, framed as an evidence/insurance service rather than a
+  requirement to use the protocol.
+
+These are documented here deliberately — AT1C's value depends on being
+verifiable and trustworthy, and that includes being transparent about
+what's solid today versus what's still being built.
 ---
 
 ## Licence
