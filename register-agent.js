@@ -4,7 +4,8 @@
  * Registers a new AI agent, issues a signed certificate, and records it in agents.json
  *
  * Usage:
- *   node register-agent.js --name "My Payment Agent" --owner "user_abc" --permissions "send_payment,read_balance"
+ *   node generate-agent-keys.js --out my-agent-keys.json   (run this first, locally)
+ *   node register-agent.js --pubkey <hex> --name "My Payment Agent" --owner "user_abc" --permissions "send_payment,read_balance"
  *   node register-agent.js --list
  *   node register-agent.js --verify <agentId>
  */
@@ -90,22 +91,33 @@ function registerAgent() {
   const owner       = getArg('--owner')
   const permsRaw    = getArg('--permissions')
   const tier        = getArg('--tier') || 'standard'
+  const pubKeyHex   = getArg('--pubkey')
 
-  if (!name || !owner || !permsRaw) {
-    console.error('Usage: node register-agent.js --name "<name>" --owner "<userId>" --permissions "<perm1,perm2>"')
+  if (!name || !owner || !permsRaw || !pubKeyHex) {
+    console.error('Usage: node register-agent.js --pubkey <hex> --name "<name>" --owner "<userId>" --permissions "<perm1,perm2>"')
     console.error('Optional: --tier free|standard|enterprise')
+    console.error('')
+    console.error('No --pubkey? Generate a keypair locally first (private key stays on your machine):')
+    console.error('  node generate-agent-keys.js --out my-agent-keys.json')
+    process.exit(1)
+  }
+
+  // Validate the public key is well-formed before accepting it —
+  // the registrar must never need or see a private key.
+  let publicKey
+  try {
+    const der = Buffer.from(pubKeyHex, 'hex')
+    publicKey = crypto.createPublicKey({ key: der, format: 'der', type: 'spki' })
+      .export({ type: 'spki', format: 'pem' })
+  } catch {
+    console.error('❌ --pubkey is not a valid SPKI-encoded public key (hex DER).')
+    console.error('   Generate one with: node generate-agent-keys.js --out my-agent-keys.json')
     process.exit(1)
   }
 
   const permissions = permsRaw.split(',').map(p => p.trim())
   const agents      = loadAgents()
   const registry    = getRegistryKeys()
-
-  // Generate agent keypair
-  const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519', {
-    publicKeyEncoding:  { type: 'spki',  format: 'pem' },
-    privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-  })
 
   const agentId   = generateAgentId()
   const certId    = generateCertId()
@@ -133,8 +145,7 @@ function registerAgent() {
     ownerUserId:      owner,
     permissions,
     tier,
-    publicKey,
-    privateKey,       // In production: never stored here, returned once to owner
+    publicKey,        // Public key only — AT1C never sees or stores private keys
     certificate: {
       ...certPayload,
       signature:      certSignature,
@@ -182,7 +193,7 @@ function listAgents() {
     console.log(`      Tier        : ${a.tier || 'standard'}`)
     console.log(`      Permissions : ${(a.permissions || []).join(', ')}`)
     console.log(`      Status      : ${status}`)
-    console.log(`      Expires     : ${a.expiresAt ? new Date(a.expiresAt).toISOString() : "legacy — no expiry set"}`)
+    console.log(`      Expires     : ${a.expiresAt ? new Date(a.expiresAt).toISOString() : 'legacy — no expiry set'}`)
   })
   console.log('\n' + '─'.repeat(42) + '\n')
 }
