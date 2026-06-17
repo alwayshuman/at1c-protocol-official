@@ -7,7 +7,34 @@
       "send_email"
     ],
     "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPXLNr9Y602UKzFSgWvDOkOpSSx2kAYyyUmJWMkxW2qQ=\n-----END PUBLIC KEY-----\n",
-    "privateKey": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIClcSWWuH7vjGofMdxtdGyPwCk5i8IMWx3KDr/kqlYhv\n-----END PRIVATE KEY-----\n",
     "createdAt": 1778232568086
+  },
+  {
+    "agentId": "agent_5805f97753a2",
+    "name": "My Agent",
+    "ownerUserId": "user_abc",
+    "permissions": [
+      "send_payment"
+    ],
+    "tier": "standard",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA/+4KP1TrMuXeyRIMI7RJNxql50F1yLsAdjzpWDzSPNc=\n-----END PUBLIC KEY-----\n",
+    "certificate": {
+      "certId": "cert_fd5a02d4d676dac7",
+      "agentId": "agent_5805f97753a2",
+      "name": "My Agent",
+      "ownerUserId": "user_abc",
+      "permissions": [
+        "send_payment"
+      ],
+      "tier": "standard",
+      "issuedAt": "2026-06-16T08:50:32.740Z",
+      "expiresAt": "2027-06-16T08:50:32.740Z",
+      "issuer": "AT1C Registry v0.1",
+      "signature": "a948c1edad673fb55afcd20666a46c8d858e430ade1a05db83cd4ec99faa946354ef65b0e702f6eb7b3f50d4a5f60f2e7a39fd64659da811ee614bf3f88b4502",
+      "registryPubKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAu237TnDouxCDfx3Rrqkoc+nY40n+1ca6YZfWE1GDZ/M=\n-----END PUBLIC KEY-----\n"
+    },
+    "status": "active",
+    "createdAt": 1781599832740,
+    "expiresAt": 1813135832740
   }
 ]
