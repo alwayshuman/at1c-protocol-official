@@ -76,12 +76,13 @@ Protocol Spec: https://github.com/alwayshuman/at1c-protocol-official/blob/main/d
 AT1C v1.0 is the protocol and SDK foundation. The following are known
 gaps being addressed in upcoming releases:
 
-- **Agent key custody (planned for v1.1)** — the current agent registrar
-  (`register-agent.js`) generates and stores agent keypairs server-side.
-  This will move to a public-key-only registration model, where agents
-  generate their own keypairs locally and the registry only ever sees
-  and signs over the public key. This makes agent registration
-  non-custodial, consistent with AT1C's user-controlled identity model.
+- **Agent key custody — ✅ done (v1.1)** — the agent registrar
+  (`register-agent.js`) now uses public-key-only registration: agents
+  generate their own keypairs locally (`generate-agent-keys.js`) and the
+  registry only ever receives and signs over the public key. Legacy
+  agent records with server-stored private keys have been cleaned up.
+  Agent registration is non-custodial, consistent with AT1C's
+  user-controlled identity model.
 
 - **End-user onboarding (planned)** — a passkey-based (WebAuthn/FIDO2)
   flow for non-technical users, so no keys are ever visible to or
