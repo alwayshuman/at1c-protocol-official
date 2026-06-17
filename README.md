@@ -94,6 +94,14 @@ gaps being addressed in upcoming releases:
   tier, framed as an evidence/insurance service rather than a
   requirement to use the protocol.
 
+- **Agent Manifest (planned, future)** — a structured, signed document per
+  agent describing intended use, prohibited uses, risk level, and human
+  oversight requirements, distinct from the lightweight permissions list
+  used by the current registrar. This would extend (not replace) the
+  existing certificate model and map more directly onto EU AI Act Article
+  13/14 documentation requirements. Lower priority than the custody and
+  onboarding work above — revisit once those are stable.
+
 These are documented here deliberately — AT1C's value depends on being
 verifiable and trustworthy, and that includes being transparent about
 what's solid today versus what's still being built.
