@@ -31,7 +31,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alwayshuman/at1c-protocol-official"
+    "url": "git+https://github.com/alwayshuman/at1c-protocol-official.git"
   },
   "homepage": "https://github.com/alwayshuman/at1c-protocol-official#readme",
   "bugs": {
