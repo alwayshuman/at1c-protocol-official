@@ -1,4 +1,3 @@
-cat > ~/at1c-protocol-official/README.md << 'EOF'
 # AT1C Protocol
 ### Cryptographic Human Consent for AI Agent Actions
 
@@ -120,4 +119,3 @@ These are documented deliberately — AT1C's value depends on being trustworthy,
 ## Licence
 
 MIT — [AT1C Protocol Contributors](LICENSE)
-EOF
