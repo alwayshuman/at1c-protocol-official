@@ -1,15 +1,16 @@
+cat > ~/at1c-protocol-official/README.md << 'EOF'
 # AT1C Protocol
-### AI Agentic Verified Accountability Layer
+### Cryptographic Human Consent for AI Agent Actions
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/v/@at1c/sdk)](https://www.npmjs.com/package/@at1c/sdk)
 [![Registry](https://img.shields.io/badge/registry-live-blue.svg)](https://registry.at1c.com/health)
 
-AI should never act on your behalf without your permission — and that permission should be provable.
+**AT1C gives you a cryptographically signed, independently verifiable proof that a human approved a specific AI agent action — before that action executes.**
 
-AT1C is an open protocol that makes every AI action auditable, consent-based, and cryptographically verifiable.
+No approval, no valid action. No exceptions.
 
-Built for developers. Designed for the EU AI Act (enforcement: August 2026).
+Built for developers. Required for EU AI Act compliance (enforcement: August 2026).
 
 ---
 
@@ -32,31 +33,34 @@ npm install @at1c/sdk
 
 ## Live Registry
 
-The AT1C Agent Registry is live at **[registry.at1c.com](https://registry.at1c.com/health)**
-
 ```bash
 curl https://registry.at1c.com/health
 ```
 
 ---
 
-## What is AT1C?
+## How it works
 
-Modern AI systems act silently — apps execute on your behalf without oversight, and there is no proof any of it was authorised.
+1. **Request** — an AI agent asks permission to perform a specific action
+2. **Approve** — a human explicitly grants or denies it
+3. **Proof** — an Ed25519-signed receipt is generated, binding the user, action, timestamp, and nonce
+4. **Verify** — any system independently verifies the receipt before execution — no trust required
 
-AT1C fixes that with one rule: **No action is valid unless backed by verifiable human approval.**
-
-Every action produces a signed receipt. Every receipt can be independently verified.
+Every receipt is single-use (nonce-based replay protection). Approval is scoped to the exact action requested — not transferable to any other action.
 
 ---
 
-## How it works
-request → approve → proof → verify
+## Why AT1C, not X
 
-1. **Request** — an AI agent asks permission to perform an action
-2. **Approve** — a human explicitly grants or denies it
-3. **Proof** — a cryptographic receipt is generated, binding the user, action, timestamp, and nonce
-4. **Verify** — any system can independently verify the receipt before execution
+The agentic AI space has several overlapping projects. Here is where AT1C differs from the closest ones:
+
+**vs. autonomous agent runtimes (Theseus, etc.)** — those systems remove humans from the loop by design. AT1C keeps a human in the loop by design. These are not competing approaches — they target different buyers. Autonomous runtimes suit DeFi/crypto use cases where fully autonomous execution is the goal. AT1C suits regulated sectors where human oversight is legally required.
+
+**vs. data redaction gateways (TrustLayer, etc.)** — those systems control what data AI sees. AT1C controls what actions AI is permitted to take. A developer could use both without conflict.
+
+**vs. payment authorization protocols (ATXP, etc.)** — those systems authorize agent payments. AT1C authorizes any agent action, with cryptographic proof of human approval, across any domain — not scoped to payments.
+
+**The field is converging on a shared framing:** treat autonomous agents as instruments acting under a person's authority, with scoped, revocable, auditable chains of responsibility. AT1C implements this today, with a working SDK and live registry.
 
 ---
 
@@ -64,12 +68,10 @@ request → approve → proof → verify
 
 The EU AI Act begins enforcement in **August 2026**. It requires:
 - Accountability for automated decisions
-- Human oversight of high-risk AI actions
+- Human oversight of high-risk AI actions  
 - Auditable records of AI behaviour
 
-AT1C gives you all three out of the box — as a lightweight SDK you can wrap around any existing system.
-
-Targeted at: fintech, health, and legal sectors.
+AT1C gives you all three out of the box. Primary target sectors: **fintech, health, legal.**
 
 ---
 
@@ -79,17 +81,11 @@ Targeted at: fintech, health, and legal sectors.
 - **Context binding** — approval is valid only for its exact action and resource
 - **Replay protection** — every receipt is single-use
 - **Verification before execution** — actions must be verified before they run
+- **Non-custodial** — AT1C never holds signing keys. Agent keys and user keys stay on their respective devices.
 
 ---
 
 ## Project structure
-at1c-protocol-official/
-
-docs/      # protocol spec + whitepaper
-
-packages/  # SDK (@at1c/sdk)
-
-examples/  # compliance demo, login demo, AI agent demo
 
 ---
 
@@ -103,22 +99,25 @@ examples/  # compliance demo, login demo, AI agent demo
 
 ## Known Limitations & Roadmap
 
-AT1C v1.0 is the protocol and SDK foundation. The following are known gaps being addressed in upcoming releases:
+- **Agent key custody — ✅ done (v1.1)** — non-custodial by design. Agents generate their own keypairs locally; the registry only ever receives and signs over the public key.
 
-- **Agent key custody — ✅ done (v1.1)** — non-custodial by design. Agents generate their own keypairs locally and the registry only ever receives and signs over the public key.
+- **Live registry — ✅ done (v1.2)** — authenticated agent verification live at `registry.at1c.com` over HTTPS. Registry private key held in environment variables only, never on the filesystem.
 
-- **Live registry — ✅ done (v1.2)** — the AT1C Agent Registry is live at `registry.at1c.com`, serving authenticated agent verification over HTTPS. Registry private key held in environment variables only, never on the filesystem.
+- **End-user onboarding (planned)** — passkey-based (WebAuthn/FIDO2) flow. The signing key lives on the user's device, unlocked by biometric — AT1C never holds it.
 
-- **End-user onboarding (planned)** — a passkey-based (WebAuthn/FIDO2) flow for non-technical users. The signing key lives on the user's device, unlocked by Face ID / fingerprint — AT1C never holds it.
+- **Receipt storage (planned, opt-in)** — currently receipts are stored locally. Hosted long-term storage planned as an optional paid tier, framed as evidence/insurance retention, not a protocol requirement.
 
-- **Receipt storage (planned, opt-in add-on)** — currently receipts are stored locally. Hosted, long-term receipt storage with explicit opt-in consent is planned as an optional paid tier, framed as an evidence/insurance service.
+- **Tier validation (planned)** — agent tier is currently caller-supplied with no server-side validation. Will be constrained to server-side assignment before open registration launches.
 
-- **Agent Manifest (planned, future)** — a structured, signed document per agent mapping directly onto EU AI Act Article 13/14 documentation requirements.
+- **Quantum resistance (future)** — AT1C currently uses Ed25519, which is not post-quantum secure. Migration to a NIST-approved post-quantum signature scheme is on the long-term roadmap. Not urgent for August 2026 compliance, but noted transparently.
 
-These are documented here deliberately — AT1C's value depends on being verifiable and trustworthy, and that includes being transparent about what is solid today versus what is still being built.
+- **Agent Manifest (future)** — structured, signed per-agent document mapping onto EU AI Act Article 13/14 documentation requirements.
+
+These are documented deliberately — AT1C's value depends on being trustworthy, and that includes being transparent about what is solid today versus what is still being built.
 
 ---
 
 ## Licence
 
 MIT — [AT1C Protocol Contributors](LICENSE)
+EOF
