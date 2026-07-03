@@ -50,7 +50,7 @@ Every receipt is single-use (nonce-based replay protection). Approval is scoped 
 
 ---
 
-## Why AT1C, not X
+## AT1C vs. The Others
 
 The agentic AI space has several overlapping projects. Here is where AT1C differs from the closest ones:
 
