@@ -305,3 +305,8 @@ PRIVATE: -----BEGIN PRIVATE KEY-----
 MC4CAQAwBQYDK2VwBCIEICuk/cpjtQLf0CAqSD1wieMMB9XcRukkwHIgx3NTNdrk
 -----END PRIVATE KEY-----
 
+3. Tier caller-supplied with no validation — STILL OPEN, still CLI-only risk.
+
+register-agent.js still accepts --tier from whoever runs the command locally. Since registration is CLI-only and only you run it locally, this is low risk right now. But it's the one item that needs attention before you ever open registration to other users. Flag it in the README Known Limitations section so it doesn't get forgotten.
+Short version: two of three resolved by what we built. One still open but not urgent.
+Want to add the tier validation note to the README now while it's fresh, or move on to the next build step?
