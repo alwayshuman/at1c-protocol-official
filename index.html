@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AT1C Protocol — Cryptographic Human Consent for AI Agent Actions</title>
 <meta name="description" content="AT1C is an open protocol giving you cryptographically signed, independently verifiable proof that a human approved a specific AI agent action — before it executes. Built for EU AI Act compliance.">
@@ -12,7 +12,7 @@ a { color: inherit; text-decoration: none; }
 
 nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: #fff; border-bottom: 1px solid #e2e8f0; }
 .nav-logo { display: flex; align-items: center; gap: 10px; }
-.logo-box { width: 32px; height: 32px; background: #2d3748; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+.logo-box { width: 32px; height: 32px; background: #2d3748; border: 2px solid #38bdf8; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
 .logo-box::after { content: ''; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: #38bdf8; border-radius: 1px; }
 .logo-box span { color: #fff; font-size: 9px; font-weight: 600; letter-spacing: 0.5px; }
 .nav-name { font-size: 15px; font-weight: 600; color: #1a202c; }
@@ -184,6 +184,15 @@ footer p { font-size: 12px; color: #718096; }
   </div>
 </section>
 
+<section style="padding:2.5rem 2rem;background:#fff;border-bottom:1px solid #e2e8f0;text-align:center">
+  <div style="max-width:620px;margin:0 auto;background:#ebf8ff;border:2px solid #38bdf8;border-radius:12px;padding:2rem">
+    <p style="font-size:11px;color:#0891b2;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:0.75rem">EU AI Act · August 2026</p>
+    <h2 style="font-size:20px;font-weight:700;color:#1a202c;margin-bottom:0.75rem">Are you an SME worried about AI Act compliance costs?</h2>
+    <p style="font-size:14px;color:#4a5568;margin-bottom:1.25rem;line-height:1.6">Large companies spend €400k–€2M per year on compliance. AT1C gives SMEs the same verifiable accountability — free, open source, deployable in a day.</p>
+    <a href="/compliance.html" style="display:inline-block;background:#2d3748;color:#fff;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none">Read the SME compliance guide →</a>
+  </div>
+</section>
+
 <section class="footer-cta">
   <h2>Ready to add consent to your agent?</h2>
   <p>Register your agent on the live registry and start generating verifiable receipts today.</p>
@@ -200,6 +209,7 @@ footer p { font-size: 12px; color: #718096; }
     <a href="https://registry.at1c.com/health">Registry status</a>
     <a href="https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/protocol.md">Protocol spec</a>
     <a href="https://www.npmjs.com/package/@at1c/sdk">npm</a>
+    <a href="/compliance.html">SME compliance guide</a>
   </div>
 </footer>
 
