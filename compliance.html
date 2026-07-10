@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AT1C Protocol — EU AI Act Compliance for SMEs</title>
+<meta name="description" content="AT1C gives SMEs and developers verifiable EU AI Act compliance — free, open source, and deployable in a day. No €400k compliance programme needed.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fa;color:#1a202c;line-height:1.6}
+a{color:inherit;text-decoration:none}
+
+.header{background:#2d3748;color:#fff;padding:1.5rem 2rem;display:flex;align-items:center;gap:12px}
+.logo-box{width:32px;height:32px;background:#1a202c;border:2px solid #38bdf8;border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.logo-box::after{content:'';position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:#38bdf8;border-radius:1px}
+.logo-box span{color:#fff;font-size:9px;font-weight:700;letter-spacing:0.5px}
+.header-text{font-size:15px;font-weight:500;color:#e2e8f0}
+
+.hero{background:#fff;border-bottom:1px solid #e2e8f0;padding:3rem 2rem;text-align:center}
+.tag{display:inline-block;background:#fef3c7;color:#92400e;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:1rem;letter-spacing:0.3px}
+.hero h1{font-size:clamp(22px,3.5vw,36px);font-weight:700;color:#1a202c;line-height:1.2;max-width:620px;margin:0 auto 1rem;letter-spacing:-0.3px}
+.hero h1 span{color:#38bdf8}
+.hero p{font-size:16px;color:#4a5568;max-width:520px;margin:0 auto;line-height:1.7}
+.cost-callout{display:inline-block;background:#fff7ed;border:1px solid #fbd38d;border-radius:8px;padding:0.75rem 1.5rem;margin-top:1.25rem;font-size:14px;color:#7b341e}
+.cost-callout strong{color:#c05621;font-size:18px}
+
+.problem{padding:2.5rem 2rem;background:#f8f9fa;border-bottom:1px solid #e2e8f0}
+.section-label{text-align:center;font-size:11px;color:#718096;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px;margin:0 auto}
+@media(max-width:500px){.two-col{grid-template-columns:1fr}}
+.problem-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem}
+.problem-card.bad{border-left:3px solid #dd6b20}
+.problem-card.good{border-left:3px solid #0891b2}
+.problem-card h4{font-size:13px;font-weight:700;margin-bottom:6px;color:#1a202c}
+.problem-card p{font-size:13px;color:#4a5568;line-height:1.5}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;margin-bottom:8px}
+.badge.red{background:#fff7ed;color:#c05621}
+.badge.green{background:#e6fffa;color:#0e7490}
+
+.requirements{padding:2.5rem 2rem;background:#fff;border-bottom:1px solid #e2e8f0}
+.req-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;max-width:760px;margin:0 auto}
+.req-card{background:#f8f9fa;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center}
+.req-icon{font-size:24px;margin-bottom:8px}
+.req-card h4{font-size:13px;font-weight:600;color:#1a202c;margin-bottom:4px}
+.req-card p{font-size:12px;color:#718096;line-height:1.4}
+.req-card .check{font-size:11px;color:#0e7490;font-weight:600;margin-top:8px}
+
+.how{padding:2.5rem 2rem;background:#f8f9fa;border-bottom:1px solid #e2e8f0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:#e2e8f0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;max-width:660px;margin:0 auto}
+.step{background:#fff;padding:1.25rem 1rem;text-align:center}
+.step-num{width:28px;height:28px;border-radius:50%;background:#2d3748;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.step.accent .step-num{background:#38bdf8}
+.step h3{font-size:13px;font-weight:600;color:#1a202c;margin-bottom:3px}
+.step p{font-size:11px;color:#718096;line-height:1.4}
+
+.why{padding:2.5rem 2rem;background:#fff;border-bottom:1px solid #e2e8f0}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;max-width:760px;margin:0 auto}
+.why-card{background:#f8f9fa;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem}
+.why-card h4{font-size:13px;font-weight:600;color:#1a202c;margin-bottom:4px}
+.why-card p{font-size:12px;color:#4a5568;line-height:1.5}
+.why-card .tag-small{font-size:10px;font-weight:600;background:#ebf8ff;color:#2b6cb0;padding:2px 7px;border-radius:10px;display:inline-block;margin-bottom:8px}
+
+.cta{padding:3rem 2rem;background:#2d3748;text-align:center;color:#fff}
+.cta h2{font-size:22px;font-weight:700;margin-bottom:0.5rem}
+.cta p{font-size:14px;color:#a0aec0;margin-bottom:1.5rem;max-width:440px;margin-left:auto;margin-right:auto}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-a{background:#38bdf8;color:#1a202c;padding:11px 22px;border-radius:8px;font-size:14px;font-weight:600;display:inline-block}
+.btn-a:hover{background:#7dd3fc}
+.btn-b{background:transparent;color:#e2e8f0;border:1px solid #4a5568;padding:11px 22px;border-radius:8px;font-size:14px;display:inline-block}
+.btn-b:hover{background:#4a5568}
+
+footer{background:#1a202c;padding:1.25rem 2rem;text-align:center}
+footer p{font-size:12px;color:#718096}
+footer a{color:#718096;margin:0 8px}
+footer a:hover{color:#a0aec0}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-box"><span>AT1C</span></div>
+  <span class="header-text">AT1C Protocol — EU AI Act Compliance for SMEs</span>
+</div>
+
+<section class="hero">
+  <div class="tag">⏰ EU AI Act enforcement begins August 2026</div>
+  <h1>EU AI Act compliance doesn't have to cost <span>€400,000</span></h1>
+  <p>Large companies will spend up to €2 million per year on AI Act compliance. AT1C gives SMEs and developers the same verifiable accountability — as a free, open-source SDK you can wrap around your existing system in a day.</p>
+  <div class="cost-callout">
+    Big Tech compliance cost: <strong>€400k–€2M/yr</strong> &nbsp;·&nbsp; AT1C: <strong>free, open source, MIT licensed</strong>
+  </div>
+</section>
+
+<section class="problem">
+  <p class="section-label">The compliance gap</p>
+  <div class="two-col">
+    <div class="problem-card bad">
+      <span class="badge red">Without AT1C</span>
+      <h4>No verifiable human oversight</h4>
+      <p>Your AI agent acts. There is no record that a human approved the specific action. Under the EU AI Act, that is a liability — not a technicality.</p>
+    </div>
+    <div class="problem-card good">
+      <span class="badge green">With AT1C</span>
+      <h4>Every action has a signed receipt</h4>
+      <p>Every AI agent action is backed by a cryptographically signed proof of human approval — independently verifiable by any auditor, regulator, or counterparty.</p>
+    </div>
+  </div>
+</section>
+
+<section class="requirements">
+  <p class="section-label">What the EU AI Act requires — and what AT1C delivers</p>
+  <div class="req-grid">
+    <div class="req-card">
+      <div class="req-icon">📋</div>
+      <h4>Accountability for automated decisions</h4>
+      <p>Regulators need to know who authorised an AI action and when.</p>
+      <div class="check">✓ AT1C receipt binds user, action, and timestamp</div>
+    </div>
+    <div class="req-card">
+      <div class="req-icon">👁️</div>
+      <h4>Human oversight of high-risk actions</h4>
+      <p>High-risk AI systems must have a human in the loop before execution.</p>
+      <div class="check">✓ AT1C requires explicit approval before any action runs</div>
+    </div>
+    <div class="req-card">
+      <div class="req-icon">🗂️</div>
+      <h4>Auditable records of AI behaviour</h4>
+      <p>You need to produce evidence of what your AI did and why.</p>
+      <div class="check">✓ Every AT1C receipt is a signed, verifiable audit record</div>
+    </div>
+    <div class="req-card">
+      <div class="req-icon">🔒</div>
+      <h4>Non-custodial by design</h4>
+      <p>AT1C never holds your signing keys. Your data stays yours.</p>
+      <div class="check">✓ Keys stay on your device — AT1C holds nothing</div>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <p class="section-label">How it works — four steps</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Request</h3>
+      <p>Your AI agent asks permission for a specific action</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Approve</h3>
+      <p>A human explicitly grants or denies it</p>
+    </div>
+    <div class="step accent">
+      <div class="step-num">3</div>
+      <h3>Proof</h3>
+      <p>A signed receipt is generated — your compliance evidence</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Verify</h3>
+      <p>Any auditor verifies independently — no trust required</p>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <p class="section-label">Why AT1C, not a €400k compliance programme</p>
+  <div class="why-grid">
+    <div class="why-card">
+      <span class="tag-small">Open source</span>
+      <h4>Free to use, forever</h4>
+      <p>MIT licensed. No vendor lock-in. Inspect every line of the protocol yourself.</p>
+    </div>
+    <div class="why-card">
+      <span class="tag-small">One day</span>
+      <h4>Wrap your existing system</h4>
+      <p>AT1C doesn't replace your stack — it adds a verifiable consent layer on top of what you already have.</p>
+    </div>
+    <div class="why-card">
+      <span class="tag-small">Live today</span>
+      <h4>Registry already running</h4>
+      <p>registry.at1c.com is live. Register your agent, start generating receipts, show auditors evidence on day one.</p>
+    </div>
+    <div class="why-card">
+      <span class="tag-small">For developers</span>
+      <h4>One npm install</h4>
+      <p><code>npm install @at1c/sdk</code> — Ed25519 signing, receipt generation, and verification, ready to go.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>August 2026 is closer than it looks</h2>
+  <p>Get your AI agents compliant today. Free account, live registry, open protocol.</p>
+  <div class="btn-row">
+    <a href="https://at1c.com/users/join.php" class="btn-a">Create free account</a>
+    <a href="https://github.com/at1c-protocol/at1c-protocol-official" class="btn-b">Read the docs</a>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="https://at1c.com">at1c.com</a>
+    <a href="https://registry.at1c.com/health">Registry status</a>
+    <a href="https://www.npmjs.com/package/@at1c/sdk">npm</a>
+    <a href="https://github.com/at1c-protocol/at1c-protocol-official">GitHub</a>
+    &nbsp;·&nbsp; MIT licence · AT1C Protocol Contributors
+  </p>
+</footer>
+
+</body>
+</html>
