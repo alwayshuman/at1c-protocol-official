@@ -90,7 +90,10 @@ AT1C gives you all three out of the box. Primary target sectors: **fintech, heal
 
 ## Documentation
 
-- Protocol Spec: [docs/protocol.md](https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/protocol.md)
+- 📄 Whitepaper: [AT1C_Protocol_Whitepaper_v1.4.docx](https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/AT1C_Protocol_Whitepaper_v1.4.docx)
+- 📜 Manifesto: [docs/manifesto.md](https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/manifesto.md)
+- 🔧 Protocol Spec: [docs/protocol.md](https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/protocol.md)
+- 📚 All docs: [docs/](https://github.com/at1c-protocol/at1c-protocol-official/tree/main/docs)
 - npm package: [@at1c/sdk](https://www.npmjs.com/package/@at1c/sdk)
 - Live registry: [registry.at1c.com](https://registry.at1c.com/health)
 
