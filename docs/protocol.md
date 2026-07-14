@@ -1,594 +1,280 @@
-AT1C Protocol Specification v0.1
-Cryptographic Approval Protocol for AI Agent Actions
-Abstract
+# AT1C Protocol Specification v1.4
 
-AT1C is a lightweight authorization protocol designed for autonomous AI systems.
+**Cryptographic Human Consent for AI Agent Actions**
 
-The protocol introduces:
+---
 
-explicit human approval
-cryptographic authorization receipts
-deterministic verification
-replay protection
-auditable execution flows
+## Abstract
 
-AT1C is built around a simple primitive:
+AT1C is an open protocol that makes every AI agent action accountable, consent-based, and cryptographically verifiable.
 
+The protocol is built on one rule:
+
+**No action is valid unless backed by verifiable human approval.**
+
+Every action produces a signed receipt. Every receipt can be independently verified. No trust in AT1C as an intermediary is required — the cryptography is the guarantee.
+
+```
 request → approve → proof → verify
+```
 
-The protocol explores how AI agents can perform actions only after producing verifiable proof of authorization.
+---
 
-Rather than relying on implicit trust, AT1C treats AI actions as signed and verifiable transactions.
+## Core Principle
 
-Chapter 1 — Purpose
+No system — human or AI — may act on behalf of a user without explicit approval, and that approval must be provable.
 
-Modern AI systems are increasingly capable of autonomous execution.
+All actions performed on behalf of a user must satisfy:
 
-Agents can:
+- **Explicit approval** — intentionally granted by the user or authorised authority
+- **Bound context** — tied to a specific action, actor, scope, and resource
+- **Verifiable proof** — independently verifiable by any system, with no reliance on AT1C
 
-deploy infrastructure
-execute transactions
-modify systems
-call APIs
-automate workflows
-operate continuously
+---
 
-However, most AI architectures still lack a standardized authorization layer.
+## Chapter 1 — Purpose
 
-Current systems often cannot prove:
+Modern AI agents execute payments, file documents, manage data, and take automated decisions — with no verifiable record that a human authorised those actions.
 
-who approved an action
-what exactly was approved
-whether approval was altered
-whether authorization was replayed
-whether execution was validly authorized
+Current systems cannot prove:
 
-AT1C exists to provide these primitives.
+- who approved an action
+- what exactly was approved
+- whether the approval was altered
+- whether the authorisation was replayed
+- whether execution was validly authorised
 
-The protocol defines a structured approval flow for AI agent actions using cryptographic receipts and deterministic verification rules.
+AT1C provides these primitives. The protocol defines a structured consent flow for AI agent actions using cryptographic receipts and deterministic verification.
 
-The objective of AT1C is not to replace AI orchestration systems.
+AT1C does not replace AI orchestration systems. It is the authorisation and accountability layer that sits alongside them.
 
-Its purpose is to provide a dedicated authorization and proof layer for autonomous execution.
+---
 
-Core Principle
+## Chapter 2 — Core Entities
 
-No system—human or AI—may act on behalf of a user without explicit approval, and that approval must be provable.
+### 2.1 User (Human Principal)
 
-All actions performed on behalf of a user MUST satisfy:
+The User is the root authority within the protocol. The User owns identity, grants approvals, defines authorisation boundaries, and may delegate permissions. The protocol assumes authorisation originates from human-controlled authority.
 
-Explicit Approval
+### 2.2 Agent
 
-Approval must be intentionally granted by the user or authorized authority.
+The Agent is the autonomous system requesting permission to perform an action. Agents do not self-authorise. All agents must operate within their authorised scope and request approval for actions outside it.
 
-Bound Context
+An agent must be registered with the AT1C registry before it can participate in the protocol. Registration binds the agent's identity to a public key — the private key never leaves the agent's device and is never held by AT1C.
 
-Approval must be tied to a specific:
+### 2.3 Approver
 
-action
-actor
-scope
-resource
-execution context
-Verifiable Proof
+The Approver is the authority responsible for granting or denying requested actions. The Approver may be a human operator, an administrative authority, or a policy engine operating within defined boundaries.
 
-Authorization must produce proof that can be independently verified by any system.
+### 2.4 Receipt
 
-Chapter 2 — Core Entities
+The Receipt is a signed cryptographic proof of authorisation. It contains the action metadata, timestamp, nonce, and signature. The Receipt is the central proof object in the protocol — the compliance evidence.
 
-AT1C defines five primary entities.
+### 2.5 Verifier
 
-2.1 User (Human Principal)
+The Verifier validates receipt authenticity, payload integrity, signature correctness, replay status, and expiration. Only verified receipts are considered authorised. Any party — the agent, a counterparty, a regulator, or an auditor — can verify independently.
 
-The User represents the root authority within the protocol.
+### 2.6 Executor
 
-The User:
+The Executor performs the approved action after successful verification. Execution without verification is non-compliant under AT1C.
 
-owns identity
-grants approvals
-defines authorization boundaries
-may delegate permissions
+---
 
-The protocol assumes that authorization originates from human-controlled authority.
+## Chapter 3 — Request Model
 
-2.2 Agent
+An Agent constructs a structured request describing the intended action before anything is executed.
 
-The Agent is the autonomous system requesting permission to perform an action.
-
-Examples:
-
-AI agents
-coding agents
-infrastructure agents
-workflow orchestrators
-applications
-services
-
-The Agent does not self-authorize actions.
-
-All agents MUST:
-
-operate within authorization scope
-request approval for actions outside approved scope
-2.3 Approver
-
-The Approver is the authority responsible for approving or rejecting requested actions.
-
-An Approver may be:
-
-a human operator
-an administrative authority
-a policy engine
-a future multi-signature approval group
-
-The Approver generates authorization intent.
-
-2.4 Receipt
-
-A Receipt is a signed cryptographic proof of authorization.
-
-The Receipt contains:
-
-action metadata
-timestamps
-integrity data
-replay protection primitives
-signatures
-
-The Receipt is the central proof object within the protocol.
-
-2.5 Verifier
-
-The Verifier validates:
-
-receipt authenticity
-payload integrity
-signature correctness
-replay status
-expiration validity
-
-Only verified receipts are considered authorized.
-
-2.6 Executor
-
-The Executor performs the approved action after successful verification.
-
-Execution without verification is considered unauthorized under the protocol model.
-
-Chapter 3 — Request Model
-
-The Request stage begins the authorization lifecycle.
-
-An Agent constructs a structured request describing the intended action.
-
-Example request categories:
-
-deploy production code
-restart infrastructure
-transfer funds
-access protected data
-invoke privileged APIs
-
-Requests should be deterministic and serializable.
-
-A request may contain:
-
-action type
-payload
-timestamps
-metadata
-scope definitions
-expiration constraints
-
-Example request object:
-
+```json
 {
-  "actor": "deployment-agent",
-  "action": "deploy_production",
-  "resource": "payments-api",
+  "actor": "payment-agent",
+  "action": "send_payment",
+  "resource": "account_12345",
   "payload": {
-    "version": "v1.2.4"
+    "amount": 250.00,
+    "currency": "GBP",
+    "recipient": "vendor_abc"
   },
-  "timestamp": 1740000000
+  "timestamp": 1753000000
 }
+```
 
-The request itself does not authorize execution.
+The request defines proposed intent only. It does not authorise execution.
 
-It only defines proposed intent.
+---
 
-Chapter 4 — Approval Model
+## Chapter 4 — Approval Model
 
-Approval represents explicit authorization by an authority.
+Approval converts a proposed action into a verifiable authorisation event.
 
 During approval:
+- The request is reviewed by the Approver
+- Authorisation intent is confirmed
+- A receipt is generated and signed
 
-The request is reviewed
-Authorization intent is confirmed
-Approval metadata is attached
-A receipt is generated and signed
+Requests may be approved, denied, or expired. Approval does not imply unlimited authority — authorisation is always context-bound.
 
-Approval metadata may include:
+---
 
-approver identity
-approval timestamp
-expiration windows
-authorization scope
-policy constraints
+## Chapter 5 — Receipt Structure
 
-The approval phase converts a proposed action into a verifiable authorization event.
-
-Approval / Denial
-
-Requests may be:
-
-approved
-denied
-expired
-revoked
-
-Approval does not imply unlimited authority.
-
-Authorization is always context-bound.
-
-Chapter 5 — Receipt Structure
-
-The Receipt is the canonical authorization artifact within AT1C.
-
-A valid receipt should contain sufficient information for independent verification.
-
-Example structure:
-
+```json
 {
-  "id": "uuid",
-  "actor": "deployment-agent",
-  "action": "deploy_production",
-  "resource": "payments-api",
+  "id": "receipt_uuid",
+  "actor": "payment-agent",
+  "action": "send_payment",
+  "resource": "account_12345",
   "payloadHash": "sha256:abc123...",
-  "approvedBy": "admin",
-  "timestamp": 1740000000,
-  "expiresAt": 1740003600,
+  "approvedBy": "user_abc",
+  "timestamp": 1753000000,
+  "expiresAt": 1753003600,
   "nonce": "7d8a2f...",
   "signature": "ed25519:..."
 }
-5.1 Required Fields
-id
+```
 
-Unique identifier for the receipt.
+### Required Fields
 
-actor
+| Field | Description |
+|-------|-------------|
+| `id` | Unique receipt identifier |
+| `actor` | The requesting agent |
+| `action` | The approved action |
+| `resource` | The target resource |
+| `payloadHash` | SHA-256 hash of the request payload |
+| `approvedBy` | Identity of the approving authority |
+| `timestamp` | Approval creation timestamp |
+| `nonce` | Unique single-use anti-replay value |
+| `signature` | Ed25519 signature over the receipt |
 
-The requesting system or agent.
+Receipts are serialised deterministically before signing to ensure consistent hashing and signature stability.
 
-action
+---
 
-The approved action identifier.
+## Chapter 6 — Five Core Safety Rules
 
-resource
+### Rule 1 — No Implicit Authority
+No action may be executed without explicit approval unless pre-authorised within a defined scope.
 
-The target resource or execution domain.
+### Rule 2 — Context Binding
+Approval must be bound to a specific action, actor, resource, and scope. Reuse of approval outside its context is invalid.
 
-payloadHash
+### Rule 3 — Proof Integrity
+Proofs must be tamper-evident, reproducible, and independently verifiable. No trust in the issuer is required after proof generation.
 
-Cryptographic hash of the request payload.
+### Rule 4 — Verification Before Execution
+Any system receiving a request must verify the receipt before executing the action.
 
-approvedBy
+### Rule 5 — Replay Protection
+A previously used nonce must not be accepted again. Replay detection prevents repeated execution using reused receipts.
 
-Identity of the approving authority.
+---
 
-timestamp
+## Chapter 7 — Cryptographic Implementation
 
-Approval creation timestamp.
+AT1C uses **Ed25519** (RFC 8032) for all signatures — an IETF-standardised elliptic curve signature scheme with a strong security record and fast verification.
 
-nonce
+**What AT1C guarantees:**
+- A valid receipt proves the holder of the private key signed the exact action payload — no one else could have produced that signature
+- Nonces are unique and single-use — replay attacks are prevented by construction
+- Agent certificates are signed by the AT1C registry root key — agent identity is independently verifiable
 
-Unique anti-replay value.
+**Layered security model:**
+AT1C is one layer in a defence-in-depth stack. The receipt proves a specific key signed a specific approval. The question of who holds that key is answered by the authentication layer (passkey, biometric, 2FA) sitting alongside AT1C. Combined, these two layers deliver identity assurance and action accountability.
 
-signature
+**Known limitation:** Ed25519 is not post-quantum secure. Migration to a NIST-approved post-quantum signature scheme is on the long-term roadmap.
 
-Cryptographic signature over the receipt contents.
+---
 
-5.2 Optional Fields
+## Chapter 8 — Agent Registration
 
-Optional future fields may include:
+Agents must be registered with the AT1C registry before participating in the protocol.
 
-expiration windows
-scoped permissions
-policy identifiers
-execution constraints
-multi-signature approvals
-5.3 Serialization
+Registration process:
+1. Agent generates an Ed25519 keypair locally — private key never leaves the device
+2. Agent submits the public key (SPKI hex DER) to the registry
+3. Registry validates the public key and signs a certificate over it
+4. Registry returns a signed agent certificate with a unique Agent ID
 
-Receipts should be serialized deterministically before signing.
+The registry is live at **registry.at1c.com**. Registration is available at **at1c.com/users/register-agent.php**.
 
-Deterministic serialization ensures:
+AT1C never holds private keys. The registry is non-custodial by design.
 
-consistent hashing
-signature stability
-reproducible verification
-Chapter 6 — Verification Rules
+---
 
-Verification determines whether a receipt is valid for execution.
+## Chapter 9 — Tiered Autonomy (Planned — v2.0)
 
-A receipt is considered valid only if all verification rules succeed.
+Not every agent action carries the same risk. AT1C's planned permission model reflects this:
 
-Rule 1 — No Implicit Authority
+- **Low trust** — explicit human approval required for every action; appropriate for high-value or sensitive actions
+- **Medium trust** — agent operates within pre-approved boundaries; alerts trigger on boundary approach
+- **High trust** — agent operates within a fully scoped envelope; human oversight via audit log and alarm
 
-No action may be executed without explicit approval unless pre-authorized within defined scope.
+This maps directly onto the EU AI Act's risk classification framework.
 
-Rule 2 — Context Binding
+*Tiered autonomy is a planned feature for AT1C v2.0. Current protocol supports scoped permissions per agent.*
 
-Approval MUST be bound to a specific:
+---
 
-action
-actor
-resource
-execution scope
+## Chapter 10 — EU AI Act Compliance
 
-Reuse of approval outside its context is invalid.
+AT1C addresses the following EU AI Act requirements (enforcement: August 2026):
 
-Rule 3 — Proof Integrity
+| Article | Requirement | AT1C Response |
+|---------|-------------|---------------|
+| Art. 9 | Risk management | Approval checkpoint at every action |
+| Art. 13 | Transparency | Request names action and resource explicitly before approval |
+| Art. 14 | Human oversight | No action executes without verified human approval |
+| Art. 17 | Quality management | Every receipt is a timestamped, tamper-evident audit record |
+| Art. 26 | Deployer obligations | Receipt log satisfies the logging requirement without custom infrastructure |
 
-Proofs MUST be:
+---
 
-tamper-evident
-reproducible
-independently verifiable
+## Chapter 11 — SDK
 
-The protocol should not require trust in the issuer after proof generation.
+The `@at1c/sdk` npm package exposes the core protocol primitives:
 
-Rule 4 — Verification Before Execution
+```bash
+npm install @at1c/sdk
+```
 
-Any system receiving a request MUST verify proof before executing the action.
+Core functions:
+- `createRequest()` — construct a structured action request
+- `approveRequest()` — generate approval intent
+- `signReceipt()` — produce a signed receipt
+- `verifyReceipt()` — verify a receipt before execution
+- `detectReplay()` — check nonce against used receipt store
+- `storeReceipt()` — persist receipt for audit
 
-Rule 5 — Revocation
+Full documentation: **github.com/at1c-protocol/at1c-protocol-official**
 
-Users SHOULD be able to revoke:
+---
 
-agent permissions
-delegated authority
-prior approvals where applicable
-6.1 Signature Verification
+## Chapter 12 — Roadmap
 
-The signature must correctly validate against:
+| Version | Status | Description |
+|---------|--------|-------------|
+| v1.1 | ✅ Done | Non-custodial agent key registration |
+| v1.2 | ✅ Done | Live registry API at registry.at1c.com |
+| v1.3 | ✅ Done | Open web registration — personal and entity agents |
+| v1.4 | Planned | Browser-side keypair generation — no terminal required |
+| v1.5 | Planned | End-user passkey (WebAuthn/FIDO2) onboarding |
+| v1.6 | Planned | Hosted receipt storage — 10-year retention paid tier |
+| v2.0 | Planned | Tiered autonomy with alarm thresholds |
+| v2.1 | Planned | Algorand x402 payment integration |
+| Future | Roadmap | Agent Manifest, post-quantum signatures |
 
-the serialized receipt
-the approver public key
+---
 
-Invalid signatures immediately invalidate the receipt.
-
-6.2 Integrity Verification
-
-The payload hash must match the original request payload.
-
-Modified payloads invalidate authorization.
-
-6.3 Timestamp Validation
-
-Verification may reject receipts that:
-
-are expired
-violate allowed time windows
-contain invalid timestamps
-6.4 Replay Protection
-
-A previously used nonce must not be accepted again.
-
-Replay detection prevents repeated execution using reused receipts.
-
-6.5 Authorization Consistency
-
-The approved action must match the executed action.
-
-Authorization for one action does not imply authorization for another.
-
-Chapter 7 — Replay Protection
-
-Replay attacks are a core concern in autonomous execution systems.
-
-Without replay protection:
-
-valid receipts could be reused indefinitely
-attackers could repeat previously approved actions
-authorization events could be duplicated maliciously
-
-AT1C mitigates replay attacks through nonce tracking.
-
-7.1 Nonce Model
-
-Each receipt contains a unique nonce value.
-
-Example:
-
-{
-  "nonce": "7d8a2f..."
-}
-
-Nonce reuse invalidates authorization.
-
-7.2 Receipt Persistence
-
-Used receipts may be persisted locally or remotely.
-
-Persistence enables:
-
-replay detection
-audit history
-execution tracking
-
-Current AT1C implementations may persist receipts in:
-
-receipts.json
-7.3 Single-Use Authorization
-
-Receipts are intended to represent single authorization events unless explicitly configured otherwise.
-
-Chapter 8 — Persistence Model
-
-AT1C supports persistent storage of authorization artifacts.
-
-Persistence allows:
-
-replay prevention
-auditing
-historical verification
-forensic analysis
-
-Persisted data may include:
-
-receipts
-used nonces
-approval timestamps
-execution metadata
-
-The persistence layer is implementation-specific and not tightly coupled to protocol semantics.
-
-Chapter 9 — SDK Surface
-
-AT1C implementations may expose a developer SDK for interacting with protocol primitives.
-
-Example interface:
-
-createRequest()
-approveRequest()
-signReceipt()
-verifyReceipt()
-detectReplay()
-storeReceipt()
-9.1 Design Goals
-
-The SDK should prioritize:
-
-deterministic behavior
-inspectable primitives
-minimal abstractions
-explicit verification
-composability
-9.2 Protocol Independence
-
-The protocol specification is independent from any single SDK implementation.
-
-Different implementations may exist across:
-
-TypeScript
-Rust
-Go
-Python
-distributed systems
-embedded systems
-Chapter 10 — Threat Model
-
-AT1C currently attempts to mitigate:
-
-unauthorized execution
-tampered approvals
-forged receipts
-replayed authorization
-payload modification
-10.1 Non-Goals (v0.1)
-
-AT1C v0.1 does not yet fully address:
-
-compromised signing keys
-distributed consensus
-Byzantine fault tolerance
-decentralized governance
-malicious execution environments
-hardware security guarantees
-
-These areas are reserved for future protocol evolution.
-
-Chapter 11 — Future Extensions
-
-AT1C is intentionally minimal in early versions.
-
-The protocol is designed to evolve incrementally.
-
-Potential future extensions include:
-
-threshold approvals
-multi-signature authorization
-policy engines
-delegated authority
-hardware-backed signing
-decentralized verification
-machine-readable governance
-scoped execution permissions
-zero-knowledge authorization proofs
-post-quantum signature systems
-cross-agent authorization standards
-Identity Model
-
-AT1C defines:
-
-user identity is self-controlled
-identity may exist across multiple systems
-authorization remains portable between implementations
-
-The protocol does NOT enforce:
-
-a specific identity provider
-a blockchain dependency
-a centralized authority model
-Implementation Agnosticism
-
-AT1C is not tied to:
-
-any blockchain
-any execution environment
-any identity provider
-any infrastructure stack
-
-The protocol MAY be implemented using:
-
-UTXO-based systems
-account-based systems
-off-chain systems
-centralized systems
-distributed systems
-Compliance
+## Compliance Statement
 
 A system is considered AT1C-compliant if:
 
-actions require valid approval or scoped authorization
-approvals produce verifiable proof
-proofs are verified before execution
+1. Actions require valid approval or scoped authorisation
+2. Approvals produce verifiable cryptographic proof
+3. Proofs are verified before execution
 
-Unattributed or unverifiable agent actions are considered non-compliant with the protocol model.
+Unattributed or unverifiable agent actions are non-compliant with the protocol.
 
-Conclusion
+---
 
-AT1C explores a simple foundational idea:
-
-AI systems should be able to prove they were authorized to act.
-
-The protocol introduces:
-
-explicit approval
-signed authorization receipts
-deterministic verification
-replay-safe execution
-auditable authorization flows
-
-As AI systems become more autonomous, authorization becomes increasingly important.
-
-AT1C proposes that autonomous execution should not rely solely on trust.
-
-It should rely on verifiable proof.
-
-Summary
-
-AT1C defines a minimal rule:
-
-Actions require approval.
-Approval produces proof.
-Proof enables verification.
-
-This establishes a foundation for:
-
-accountable automation
-user-controlled authorization
-verifiable digital interactions
-cryptographic accountability for AI systems
-
-AT1C Protocol Specification  v0.1
-A. Human
+*AT1C Protocol Specification v1.4 · © 2026 AT1C Protocol Contributors · MIT Licence*
