@@ -1,0 +1,47 @@
+# AT1C Protocol — Documentation
+
+Start here. Most important documents listed first.
+
+---
+
+## 📄 Whitepaper (v1.4 — current)
+**[AT1C_Protocol_Whitepaper_v1.4.docx](AT1C_Protocol_Whitepaper_v1.4.docx)** — Word document, full whitepaper including EU AI Act compliance mapping, sector analysis, cost comparison, and Algorand x402 payment architecture.
+
+**[whitepaper.md](whitepaper.md)** — Markdown version of the same whitepaper, readable directly on GitHub.
+
+---
+
+## 📜 Manifesto
+**[manifesto.md](manifesto.md)** — AT1C's founding principles: sovereign identity, human-first AI, open standards.
+
+---
+
+## 🔧 Protocol Specification
+**[protocol.md](protocol.md)** — Full technical specification v1.4: entities, receipt structure, verification rules, cryptographic guarantees, EU AI Act mapping, SDK reference, roadmap.
+
+---
+
+## 📚 Supporting Documents
+
+| Document | Description |
+|----------|-------------|
+| [architecture.md](architecture.md) | System architecture overview |
+| [receipts.md](receipts.md) | Receipt format and storage |
+| [signatures.md](signatures.md) | Ed25519 signing implementation |
+| [verification.md](verification.md) | Verification rules and replay protection |
+| [scopes.md](scopes.md) | Permission scopes and context binding |
+| [agent-execution.md](agent-execution.md) | Agent execution lifecycle |
+| [policy-engine.md](policy-engine.md) | Policy engine reference |
+
+---
+
+## Quick Links
+
+- **Live registry:** [registry.at1c.com](https://registry.at1c.com/health)
+- **Register an agent:** [at1c.com/users/register-agent.php](https://at1c.com/users/register-agent.php)
+- **npm SDK:** [@at1c/sdk](https://www.npmjs.com/package/@at1c/sdk)
+- **SME compliance guide:** [at1c.com/compliance.html](https://at1c.com/compliance.html)
+
+---
+
+*© 2026 AT1C Protocol Contributors · MIT Licence*
