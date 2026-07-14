@@ -30,6 +30,14 @@ npm install @at1c/sdk
 
 ---
 
+## Key Documents
+
+- 📄 [Whitepaper](https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/whitepaper.md) — EU AI Act compliance, sector analysis, Algorand x402 payment architecture
+- 📜 [Manifesto](https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/manifesto.md) — AT1C founding principles: sovereign identity, humans first
+- 📚 [All docs](https://github.com/at1c-protocol/at1c-protocol-official/tree/main/docs) — protocol spec, receipts, verification, SDK reference
+
+---
+
 ## Live Registry
 
 ```bash
