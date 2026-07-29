@@ -113,6 +113,18 @@ AT1C gives you all three out of the box. Primary target sectors: **fintech, heal
 
 - **Live registry — ✅ done (v1.2)** — authenticated agent verification live at `registry.at1c.com` over HTTPS. Registry private key held in environment variables only, never on the filesystem.
 
+- **Open web registration — ✅ done (v1.3)** — any user can register a personal or entity-owned agent via `at1c.com/users/register-agent.php`. No CLI required for registration.
+
+- **Browser-side keypair generation — ✅ done (v1.4)** — Ed25519 keypair generated in the browser using the Web Crypto API. Private key downloads automatically, never touches the server. Permissions selected via checkboxes. No terminal required — accessible to non-technical users.
+
+- **End-user passkey onboarding (planned v1.5)** — WebAuthn/FIDO2 flow so the signing key lives on the user's device, unlocked by Face ID or fingerprint. AT1C never holds it.
+
+- **Hosted receipt storage (planned v1.6)** — currently receipts are stored locally. Long-term hosted storage planned as an optional paid tier — evidence/insurance retention, not a protocol requirement.
+
+- **Tiered autonomy (planned v2.0)** — low/medium/high trust tiers with alarm thresholds for fleet management. Maps directly onto EU AI Act risk classifications.
+
+- **Algorand x402 payment integration (planned v2.1)** — sub-/usr/bin/bash.0002 micro-transaction fees, USDC settlement, card onramp. Target payment rail for agent-scale commerce.
+
 - **End-user onboarding (planned)** — passkey-based (WebAuthn/FIDO2) flow. The signing key lives on the user's device, unlocked by biometric — AT1C never holds it.
 
 - **Receipt storage (planned, opt-in)** — currently receipts are stored locally. Hosted long-term storage planned as an optional paid tier, framed as evidence/insurance retention, not a protocol requirement.
