@@ -202,7 +202,7 @@ Register at **at1c.com/users/register-agent.php** — set agent name, permission
 | v1.1 | ✅ Done | Non-custodial agent key registration |
 | v1.2 | ✅ Done | Live registry API at registry.at1c.com |
 | v1.3 | ✅ Done | Open web registration — personal and entity agents |
-| v1.4 | Planned | Browser-side keypair generation — no terminal required |
+| v1.4 | ✅ Done | Browser-side keypair generation — no terminal required |
 | v1.5 | Planned | End-user passkey (WebAuthn/FIDO2) onboarding |
 | v1.6 | Planned | Hosted receipt storage — 10-year retention paid tier |
 | v2.0 | Planned | Tiered autonomy with alarm thresholds for fleet management |

@@ -123,13 +123,8 @@ AT1C gives you all three out of the box. Primary target sectors: **fintech, heal
 
 - **Tiered autonomy (planned v2.0)** — low/medium/high trust tiers with alarm thresholds for fleet management. Maps directly onto EU AI Act risk classifications.
 
-- **Algorand x402 payment integration (planned v2.1)** — sub-/usr/bin/bash.0002 micro-transaction fees, USDC settlement, card onramp. Target payment rail for agent-scale commerce.
+- **Algorand x402 payment integration (planned v2.1)** — sub-$0.0002 micro-transaction fees, USDC settlement, card onramp. Target payment rail for agent-scale commerce.
 
-- **End-user onboarding (planned)** — passkey-based (WebAuthn/FIDO2) flow. The signing key lives on the user's device, unlocked by biometric — AT1C never holds it.
-
-- **Receipt storage (planned, opt-in)** — currently receipts are stored locally. Hosted long-term storage planned as an optional paid tier, framed as evidence/insurance retention, not a protocol requirement.
-
-- **Tier validation (planned)** — agent tier is currently caller-supplied with no server-side validation. Will be constrained to server-side assignment before open registration launches.
 
 - **Quantum resistance (future)** — AT1C currently uses Ed25519, which is not post-quantum secure. Migration to a NIST-approved post-quantum signature scheme is on the long-term roadmap. Not urgent for August 2026 compliance, but noted transparently.
 
