@@ -4,10 +4,10 @@ Start here. Most important documents listed first.
 
 ---
 
-## 📄 Whitepaper (v1.4 — current)
-**[AT1C_Protocol_Whitepaper_v1.4.docx](AT1C_Protocol_Whitepaper_v1.4.docx)** — Word document, full whitepaper including EU AI Act compliance mapping, sector analysis, cost comparison, and Algorand x402 payment architecture.
+## 📄 Whitepaper (v1.6 — current)
+**[▶ Read online: whitepaper.md](whitepaper.md)** — Renders directly in your browser. Start here.
 
-**[whitepaper.md](whitepaper.md)** — Markdown version of the same whitepaper, readable directly on GitHub.
+**[⬇ Download: AT1C_Protocol_Whitepaper_v1.6.docx](AT1C_Protocol_Whitepaper_v1.6.docx)** — Word document for sharing with compliance officers, legal teams, and partners.
 
 ---
 
