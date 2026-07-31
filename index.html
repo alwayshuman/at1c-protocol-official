@@ -1,81 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AT1C Protocol — Cryptographic Human Consent for AI Agent Actions</title>
-<meta name="description" content="AT1C is an open protocol giving you cryptographically signed, independently verifiable proof that a human approved a specific AI agent action — before it executes. Built for EU AI Act compliance.">
+<title>AT1C Protocol — The Evidence Layer for Human Control of AI</title>
+<meta name="description" content="AT1C is an open protocol that proves a human approved a specific AI agent action — before it executed. Free, open source, MIT licensed. EU AI Act compliance in a day.">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; color: #1a202c; line-height: 1.6; }
 a { color: inherit; text-decoration: none; }
 
-nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: #fff; border-bottom: 1px solid #e2e8f0; }
+nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: #2d3748; }
 .nav-logo { display: flex; align-items: center; gap: 10px; }
-.logo-box { width: 32px; height: 32px; background: #2d3748; border: 2px solid #38bdf8; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
-.logo-box::after { content: ''; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: #38bdf8; border-radius: 1px; }
-.logo-box span { color: #fff; font-size: 9px; font-weight: 600; letter-spacing: 0.5px; }
-.nav-name { font-size: 15px; font-weight: 600; color: #1a202c; }
+.logo-box { width: 30px; height: 30px; background: #1a202c; border: 2px solid #38bdf8; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+.logo-box::after { content: ''; position: absolute; top: -3px; right: -3px; width: 7px; height: 7px; background: #38bdf8; border-radius: 1px; }
+.logo-box span { color: #fff; font-size: 8px; font-weight: 700; letter-spacing: 0.5px; }
+.nav-name { font-size: 15px; font-weight: 600; color: #e2e8f0; }
 .nav-links { display: flex; align-items: center; gap: 1.5rem; }
-.nav-links a { font-size: 14px; color: #4a5568; }
-.nav-links a:hover { color: #1a202c; }
-.nav-btn { background: #2d3748; color: #fff !important; padding: 7px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; }
-.nav-btn:hover { background: #1a2332 !important; }
+.nav-links a { font-size: 13px; color: #a0aec0; }
+.nav-links a:hover { color: #e2e8f0; }
+.nav-btn { background: #38bdf8; color: #1a202c !important; padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; }
 
-.hero { padding: 5rem 2rem 4rem; text-align: center; background: #fff; border-bottom: 1px solid #e2e8f0; }
-.eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #4a5568; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 20px; padding: 4px 12px; margin-bottom: 1.5rem; letter-spacing: 0.3px; }
-.dot-live { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-.hero h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 700; color: #1a202c; line-height: 1.2; max-width: 640px; margin: 0 auto 1.25rem; letter-spacing: -0.5px; }
+.hero { padding: 5rem 2rem 4rem; text-align: center; background: #2d3748; color: #fff; }
+.eyebrow { font-size: 11px; color: #a0aec0; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1.25rem; }
+.hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; line-height: 1.2; max-width: 620px; margin: 0 auto 1.25rem; letter-spacing: -0.5px; color: #fff; }
 .hero h1 em { font-style: normal; color: #38bdf8; }
-.hero p { font-size: 17px; color: #4a5568; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; }
-.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.btn-primary { background: #2d3748; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 500; display: inline-block; transition: background 0.15s; }
-.btn-primary:hover { background: #1a2332; color: #fff; }
-.btn-secondary { background: transparent; color: #1a202c; border: 1px solid #cbd5e0; padding: 12px 24px; border-radius: 8px; font-size: 15px; display: inline-block; transition: background 0.15s; }
-.btn-secondary:hover { background: #f1f5f9; }
+.hero p { font-size: 17px; color: #a0aec0; max-width: 480px; margin: 0 auto 2rem; line-height: 1.7; }
+.hero-proof { font-size: 13px; color: #718096; margin-top: 1.25rem; font-style: italic; }
 
-.flow-section { padding: 3rem 2rem; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; }
-.section-label { text-align: center; font-size: 11px; color: #718096; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; }
-.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; max-width: 700px; margin: 0 auto; }
-.step { background: #fff; padding: 1.5rem 1rem; text-align: center; }
-.step-num { width: 32px; height: 32px; border-radius: 50%; background: #2d3748; color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
-.step.accent .step-num { background: #38bdf8; }
-.step h3 { font-size: 14px; font-weight: 600; color: #1a202c; margin-bottom: 4px; }
-.step p { font-size: 16px; color: #FFFFFF; line-height: 1.5; }
+.btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-primary { background: #38bdf8; color: #1a202c; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block; }
+.btn-primary:hover { background: #7dd3fc; }
+.btn-secondary { background: transparent; color: #e2e8f0; border: 1px solid #4a5568; padding: 12px 24px; border-radius: 8px; font-size: 15px; display: inline-block; }
+.btn-secondary:hover { background: #4a5568; }
+.btn-light { background: transparent; color: #2d3748; border: 1px solid #cbd5e0; padding: 11px 22px; border-radius: 8px; font-size: 14px; display: inline-block; }
+.btn-light:hover { background: #f1f5f9; }
+.btn-dark { background: #2d3748; color: #fff; padding: 11px 22px; border-radius: 8px; font-size: 14px; font-weight: 500; display: inline-block; }
+.btn-dark:hover { background: #1a2332; }
 
-.install-section { padding: 2.5rem 2rem; background: #fff; border-bottom: 1px solid #e2e8f0; text-align: center; }
-.code-wrap { display: inline-flex; align-items: center; gap: 12px; background: #1a202c; color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 14px; padding: 12px 20px; border-radius: 8px; margin-top: 1rem; }
-.copy-btn { background: #2d3748; color: #a0aec0; border: none; padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-.copy-btn:hover { background: #38bdf8; color: #fff; }
+section { padding: 3.5rem 2rem; border-bottom: 1px solid #e2e8f0; }
+section:last-of-type { border-bottom: none; }
+.section-label { font-size: 11px; color: #718096; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; display: block; }
+h2 { font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #1a202c; line-height: 1.25; margin-bottom: 1rem; letter-spacing: -0.3px; }
+h3 { font-size: 15px; font-weight: 600; color: #1a202c; margin-bottom: 4px; }
+p { font-size: 15px; color: #4a5568; line-height: 1.7; }
 
-.cards-section { padding: 3rem 2rem; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; }
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; max-width: 860px; margin: 0 auto; }
-.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; }
-.card-icon { width: 36px; height: 36px; background: #ebf8ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-.card-icon svg { width: 18px; height: 18px; stroke: #38bdf8; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.card h4 { font-size: 14px; font-weight: 600; color: #1a202c; margin-bottom: 4px; }
-.card p { font-size: 13px; color: #718096; line-height: 1.5; }
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 1.5rem; }
+@media (max-width: 540px) { .problem-grid { grid-template-columns: 1fr; } }
+.problem-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; }
+.problem-card.bad { border-left: 3px solid #f97316; }
+.problem-card.good { border-left: 3px solid #0891b2; }
+.badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+.badge-danger { background: #fff7ed; color: #c2410c; }
+.badge-success { background: #ecfeff; color: #0e7490; }
 
-.compliance-section { padding: 2.5rem 2rem; background: #fff; border-bottom: 1px solid #e2e8f0; text-align: center; }
-.compliance-section p { font-size: 15px; color: #4a5568; max-width: 520px; margin: 0 auto; line-height: 1.7; }
-.compliance-section strong { color: #1a202c; }
-.sector-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
-.pill { font-size: 12px; color: #2d3748; background: #ebf8ff; border: 1px solid #bee3f8; padding: 4px 12px; border-radius: 20px; }
+.quote-block { border-left: 3px solid #38bdf8; padding: 1rem 1.25rem; background: #ebf8ff; border-radius: 0 8px 8px 0; margin: 1.5rem 0; }
+.quote-block p { font-size: 15px; color: #0e7490; font-style: italic; line-height: 1.6; }
+.quote-block cite { font-size: 12px; color: #0891b2; font-style: normal; display: block; margin-top: 6px; }
 
-.footer-cta { padding: 4rem 2rem; text-align: center; background: #2d3748; color: #fff; }
-.footer-cta h2 { font-size: 24px; font-weight: 700; margin-bottom: 0.75rem; }
-.footer-cta p { font-size: 15px; color: #a0aec0; margin-bottom: 2rem; }
-.footer-cta .btn-primary { background: #38bdf8; color: #1a202c; }
-.footer-cta .btn-primary:hover { background: #7dd3fc; }
-.footer-cta .btn-secondary { color: #e2e8f0; border-color: #4a5568; }
-.footer-cta .btn-secondary:hover { background: #4a5568; }
+.flow-section { background: #f8f9fa; }
+.flow-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1px; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; max-width: 700px; margin: 1.5rem auto 0; }
+.flow-step { background: #fff; padding: 1.25rem 1rem; text-align: center; }
+.flow-step .num { width: 28px; height: 28px; border-radius: 50%; background: #2d3748; color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; }
+.flow-step.accent .num { background: #38bdf8; }
+.flow-step h3 { font-size: 13px; margin-bottom: 3px; }
+.flow-step p { font-size: 12px; line-height: 1.4; }
 
-footer { padding: 1.5rem 2rem; background: #1a202c; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-footer p { font-size: 12px; color: #718096; }
-.footer-links { display: flex; gap: 1.5rem; }
-.footer-links a { font-size: 16px; color: #FFFFFF; }
+.audience-section { background: #fff; }
+.audience-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 1.5rem; }
+.audience-card { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; }
+.audience-card .icon { font-size: 24px; margin-bottom: 8px; }
+.audience-card h3 { margin-bottom: 6px; }
+
+.eu-section { background: #f8f9fa; }
+.eu-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.5rem; margin-top: 1.5rem; }
+.eu-table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
+.eu-table th { text-align: left; font-size: 12px; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
+.eu-table td { font-size: 13px; padding: 10px 12px; border-bottom: 1px solid #f1f5f9; color: #4a5568; vertical-align: top; }
+.eu-table td:first-child { font-weight: 600; color: #2d3748; white-space: nowrap; }
+.cost-callout { background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 1rem 1.25rem; margin-top: 1.25rem; font-size: 14px; color: #0e7490; }
+.cost-callout strong { font-size: 18px; color: #0891b2; }
+
+.identity-section { background: #2d3748; color: #fff; }
+.identity-section .section-label { color: #a0aec0; }
+.identity-section h2 { color: #fff; }
+.identity-section p { color: #a0aec0; }
+.identity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 1.5rem; }
+@media (max-width: 540px) { .identity-grid { grid-template-columns: 1fr; } }
+.identity-card { background: #1a202c; border: 1px solid #4a5568; border-radius: 10px; padding: 1.25rem; text-align: center; }
+.identity-card .icon { font-size: 28px; margin-bottom: 8px; }
+.identity-card h3 { color: #e2e8f0; margin-bottom: 6px; }
+.identity-card p { color: #718096; font-size: 13px; line-height: 1.5; }
+.manifesto-pull { font-size: 18px; color: #e2e8f0; line-height: 1.7; border-left: 3px solid #38bdf8; padding: 1rem 1.5rem; margin: 2rem 0 0; background: #1a202c; border-radius: 0 8px 8px 0; font-style: italic; }
+
+.legal-section { background: #fff; }
+.legal-box { background: #f0fff4; border: 1px solid #9ae6b4; border-radius: 10px; padding: 1.25rem; margin-top: 1.25rem; }
+.legal-box p { color: #276749; font-size: 14px; line-height: 1.6; }
+
+.cta-section { background: #1a202c; padding: 4rem 2rem; text-align: center; }
+.cta-section h2 { color: #fff; margin-bottom: 0.75rem; }
+.cta-section p { color: #a0aec0; margin-bottom: 2rem; max-width: 420px; margin-left: auto; margin-right: auto; }
+
+footer { background: #0f1419; padding: 1.5rem 2rem; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 1rem; }
+.footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-links a { font-size: 13px; color: #718096; }
 .footer-links a:hover { color: #a0aec0; }
+footer p { font-size: 12px; color: #4a5568; }
 </style>
 </head>
 <body>
@@ -86,130 +117,192 @@ footer p { font-size: 12px; color: #718096; }
     <span class="nav-name">AT1C Protocol</span>
   </div>
   <div class="nav-links">
+    <a href="https://at1c.com/compliance.html">SME guide</a>
     <a href="https://github.com/at1c-protocol/at1c-protocol-official">Docs</a>
-    <a href="https://registry.at1c.com/health">Registry</a>
-    <a href="users/login.php">Sign in</a>
-    <a href="users/join.php" class="nav-btn">Get started</a>
+    <a href="https://at1c.com/users/login.php">Sign in</a>
+    <a href="https://at1c.com/users/join.php" class="nav-btn">Get started</a>
   </div>
 </nav>
 
-<section class="hero">
-  <div class="eyebrow">
-    <span class="dot-live"></span>
-    registry.at1c.com is live &nbsp;·&nbsp; Open protocol &nbsp;·&nbsp; MIT licence
-  </div>
-  <h1>Cryptographic proof a human approved your <em>AI agent's</em> action</h1>
-  <p>No approval, no valid action. Every agent action produces a signed, independently verifiable receipt — before it executes.</p>
-  <div class="cta-row">
-    <a href="users/join.php" class="btn-primary">Create free account</a>
+<div class="hero">
+  <p class="eyebrow">Open protocol · MIT licensed · EU AI Act ready</p>
+  <h1>The evidence layer for <em>human control</em> of AI</h1>
+  <p>AI agents can act for you. AT1C makes sure they only act with your permission — and proves it, cryptographically, every time.</p>
+  <div class="btn-row">
+    <a href="https://at1c.com/users/join.php" class="btn-primary">Register your agent</a>
     <a href="https://github.com/at1c-protocol/at1c-protocol-official" class="btn-secondary">Read the docs</a>
+  </div>
+  <p class="hero-proof">"Don't trust us. Verify the receipt."</p>
+</div>
+
+<section>
+  <span class="section-label">The problem</span>
+  <h2>Right now, you can't prove what you approved</h2>
+  <p>AI tools make decisions. Platforms control your access. Your agents act — and there is no cryptographic record that you said yes.</p>
+
+  <div class="quote-block">
+    <p>AI agents lack intention, so liability can only attach to the human who approved the action. But only if there is evidence of what they approved.</p>
+    <cite>— Ayres &amp; Balkin, Yale Law School / University of Chicago Law Review, 2026</cite>
+  </div>
+
+  <div class="problem-grid">
+    <div class="problem-card bad">
+      <span class="badge badge-danger">Without AT1C</span>
+      <h3>No verifiable record</h3>
+      <p style="font-size: 13px; margin-top: 4px;">Your agent acts. There is no proof you approved it. Under the EU AI Act, that is a liability. In court, that is no evidence.</p>
+    </div>
+    <div class="problem-card good">
+      <span class="badge badge-success">With AT1C</span>
+      <h3>Signed receipt, every time</h3>
+      <p style="font-size: 13px; margin-top: 4px;">Every action is backed by a cryptographically signed proof of your approval — independently verifiable by any auditor, regulator, or counterparty.</p>
+    </div>
   </div>
 </section>
 
 <section class="flow-section">
-  <p class="section-label">How it works</p>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
+  <span class="section-label" style="text-align:center; display:block;">How it works</span>
+  <h2 style="text-align:center;">Four steps. One receipt. Permanent proof.</h2>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="num">1</div>
       <h3>Request</h3>
       <p>Agent asks permission for a specific action</p>
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
+    <div class="flow-step">
+      <div class="num">2</div>
       <h3>Approve</h3>
-      <p>Human explicitly grants or denies it</p>
+      <p>You explicitly grant or deny it</p>
     </div>
-    <div class="step accent">
-      <div class="step-num">3</div>
+    <div class="flow-step accent">
+      <div class="num">3</div>
       <h3>Proof</h3>
-      <p>Ed25519-signed receipt generated and bound to user, action, and nonce</p>
+      <p>Signed receipt generated — your permanent evidence</p>
     </div>
-    <div class="step">
-      <div class="step-num">4</div>
+    <div class="flow-step">
+      <div class="num">4</div>
       <h3>Verify</h3>
-      <p>Any system independently verifies — no trust required</p>
+      <p>Any party verifies independently — no trust needed</p>
+    </div>
+  </div>
+  <p style="text-align:center; margin-top: 1.25rem; font-size: 14px;">No wallets. No seed phrases. No complexity. Register in minutes.</p>
+</section>
+
+<section class="audience-section">
+  <span class="section-label">Who it is for</span>
+  <h2>Personal agents. Enterprise fleets. Regulated industries.</h2>
+  <p>AT1C works for anyone whose AI agent takes actions on their behalf.</p>
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="icon">👤</div>
+      <h3>Individuals</h3>
+      <p style="font-size: 13px; margin-top: 4px;">Own a verifiable record of every action your personal AI takes. Approve, revoke, and audit — with no platform in between.</p>
+    </div>
+    <div class="audience-card">
+      <div class="icon">🏢</div>
+      <h3>SMEs &amp; enterprises</h3>
+      <p style="font-size: 13px; margin-top: 4px;">Manage fleets of agents across business processes. EU AI Act compliant from day one. Free, open source, wraps your existing stack.</p>
+    </div>
+    <div class="audience-card">
+      <div class="icon">⚖️</div>
+      <h3>Fintech, health, legal</h3>
+      <p style="font-size: 13px; margin-top: 4px;">High-risk AI sectors where every action needs a verifiable human approval record — for regulators, auditors, and counterparties.</p>
+    </div>
+    <div class="audience-card">
+      <div class="icon">💻</div>
+      <h3>Developers</h3>
+      <p style="font-size: 13px; margin-top: 4px;"><code style="font-size: 12px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">npm install @at1c/sdk</code> — Ed25519 signing, receipt generation, verification. MIT licensed.</p>
     </div>
   </div>
 </section>
 
-<section class="install-section">
-  <p class="section-label">Install the SDK</p>
-  <div class="code-wrap">
-    <span>npm install @at1c/sdk</span>
-    <button class="copy-btn" onclick="navigator.clipboard.writeText('npm install @at1c/sdk').then(()=>{this.textContent='✓ copied';setTimeout(()=>{this.textContent='copy'},1500)})">copy</button>
+<section class="eu-section">
+  <span class="section-label">EU AI Act · enforcement August 2026</span>
+  <h2>SME compliance doesn't have to cost €400,000</h2>
+  <p>Large companies spend €400k–€2M per year on AI Act compliance infrastructure. AT1C gives SMEs the same verifiable accountability in a day.</p>
+
+  <div class="cost-callout">
+    Enterprise compliance cost: <strong>€400k–€2M/yr</strong> &nbsp;·&nbsp; AT1C: <strong>€0 — open source, MIT licensed</strong>
+  </div>
+
+  <div class="eu-box">
+    <table class="eu-table">
+      <thead>
+        <tr>
+          <th>Article</th>
+          <th>Requirement</th>
+          <th>AT1C delivers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Art. 9</td><td>Risk management</td><td>Approval checkpoint at every action</td></tr>
+        <tr><td>Art. 13</td><td>Transparency</td><td>Request names action explicitly before approval</td></tr>
+        <tr><td>Art. 14</td><td>Human oversight</td><td>No action executes without verified approval</td></tr>
+        <tr><td>Art. 17</td><td>Quality management</td><td>Every receipt is a tamper-evident audit record</td></tr>
+        <tr><td>Art. 26</td><td>Deployer obligations</td><td>Receipt log satisfies logging requirements</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top: 1.25rem;">
+    <a href="https://at1c.com/compliance.html" class="btn-light">Read the full SME compliance guide →</a>
   </div>
 </section>
 
-<section class="cards-section">
-  <p class="section-label">Why AT1C</p>
-  <div class="cards-grid">
-    <div class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <h4>Non-custodial</h4>
-      <p>AT1C never holds signing keys. Agent keys and user keys stay on their respective devices.</p>
+<section class="identity-section">
+  <span class="section-label">The bigger picture</span>
+  <h2>Three-part identity. Yours forever.</h2>
+  <p>AT1C is more than a compliance tool. It is the foundation of a model where humans own their digital identity — across every system, every AI, and every lifetime.</p>
+
+  <div class="identity-grid">
+    <div class="identity-card">
+      <div class="icon">🌐</div>
+      <h3>Public identity</h3>
+      <p>Your verified self — provable, portable, not owned by any platform</p>
     </div>
-    <div class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622C17.176 19.29 21 14.591 21 9a12.02 12.02 0 00-.382-3.016z"/></svg>
-      </div>
-      <h4>Verifiable proof</h4>
-      <p>Every receipt is cryptographically signed. Any party can verify independently — no trust required.</p>
+    <div class="identity-card">
+      <div class="icon">🔒</div>
+      <h3>Private identity</h3>
+      <p>Your anonymous space — protected, untracked, under your control</p>
     </div>
-    <div class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-      </div>
-      <h4>Replay protection</h4>
-      <p>Nonce-based single-use receipts. An approval for one action can never be reused for another.</p>
+    <div class="identity-card">
+      <div class="icon">∞</div>
+      <h3>Lifecycle identity</h3>
+      <p>Inheritable. Transferable. Your digital life outlives you on your own terms.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      </div>
-      <h4>Open source</h4>
-      <p>MIT licensed. Inspect the protocol, fork it, wrap your existing system. No lock-in.</p>
-    </div>
+  </div>
+
+  <p class="manifesto-pull">Identity belongs to the individual, not the platform. AI agents should serve humanity, not control it. Ownership of self is the foundation. Freedom is the AT1C Protocol. Humans first.</p>
+</section>
+
+<section class="legal-section">
+  <span class="section-label">Legal foundation</span>
+  <h2>AT1C is the evidentiary infrastructure AI accountability law requires</h2>
+  <p>Legal scholars have identified the core gap: when an AI agent causes harm, liability attaches to the human who approved the action — but only if there is evidence of what they approved. Without a verifiable consent record, accountability collapses.</p>
+
+  <div class="legal-box">
+    <p>AT1C's signed receipt is exactly that evidence. Every receipt is a timestamped, cryptographically signed record that a specific human explicitly approved a specific agent action. It transforms the legal question from "did the principal exercise reasonable care?" — hard to prove, subjective — to "is there a signed receipt?" — verifiable, objective, on the record.</p>
   </div>
 </section>
 
-<section class="compliance-section">
-  <p class="section-label">EU AI Act compliance</p>
-  <p>The EU AI Act requires <strong>accountability for automated decisions</strong>, human oversight of high-risk AI actions, and auditable records of AI behaviour. AT1C gives you all three out of the box. Enforcement begins <strong>August 2026</strong>.</p>
-  <div class="sector-pills">
-    <span class="pill">Fintech</span>
-    <span class="pill">Health</span>
-    <span class="pill">Legal</span>
-  </div>
-</section>
-
-<section style="padding:2.5rem 2rem;background:#fff;border-bottom:1px solid #e2e8f0;text-align:center">
-  <div style="max-width:620px;margin:0 auto;background:#ebf8ff;border:2px solid #38bdf8;border-radius:12px;padding:2rem">
-    <p style="font-size:11px;color:#0891b2;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:0.75rem">EU AI Act · August 2026</p>
-    <h2 style="font-size:20px;font-weight:700;color:#1a202c;margin-bottom:0.75rem">Are you an SME worried about AI Act compliance costs?</h2>
-    <p style="font-size:14px;color:#4a5568;margin-bottom:1.25rem;line-height:1.6">Large companies spend €400k–€2M per year on compliance. AT1C gives SMEs the same verifiable accountability — free, open source, deployable in a day.</p>
-    <a href="/compliance.html" style="display:inline-block;background:#2d3748;color:#fff;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none">Read the SME compliance guide →</a>
-  </div>
-</section>
-
-<section class="footer-cta">
-  <h2>Ready to add consent to your agent?</h2>
-  <p>Register your agent on the live registry and start generating verifiable receipts today.</p>
-  <div class="cta-row">
-    <a href="users/join.php" class="btn-primary">Create free account</a>
-    <a href="https://www.npmjs.com/package/@at1c/sdk" class="btn-secondary">View on npm</a>
+<section class="cta-section">
+  <h2>Start today. No credit card. No complexity.</h2>
+  <p>Register your first agent in minutes. The private key stays on your device. AT1C never holds it.</p>
+  <div class="btn-row">
+    <a href="https://at1c.com/users/join.php" class="btn-primary">Create free account</a>
+    <a href="https://at1c.com/users/register-agent.php" class="btn-secondary">Register an agent</a>
   </div>
 </section>
 
 <footer>
-  <p>© 2026 AT1C Protocol Contributors · MIT licence</p>
-  <div class="footer-links">
-    <a href="https://github.com/at1c-protocol/at1c-protocol-official">GitHub</a>
-    <a href="https://registry.at1c.com/health">Registry status</a>
-    <a href="https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/protocol.md">Protocol spec</a>
-    <a href="https://www.npmjs.com/package/@at1c/sdk">npm</a>
-    <a href="/compliance.html">SME compliance guide</a>
+  <div class="footer-inner">
+    <p>© 2026 AT1C Protocol Contributors · MIT Licence</p>
+    <div class="footer-links">
+      <a href="https://at1c.com">at1c.com</a>
+      <a href="https://github.com/at1c-protocol/at1c-protocol-official">GitHub</a>
+      <a href="https://registry.at1c.com/health">Registry status</a>
+      <a href="https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/whitepaper.md">Whitepaper</a>
+      <a href="https://github.com/at1c-protocol/at1c-protocol-official/blob/main/docs/manifesto.md">Manifesto</a>
+      <a href="https://www.npmjs.com/package/@at1c/sdk">npm</a>
+    </div>
   </div>
 </footer>
 
