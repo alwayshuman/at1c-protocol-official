@@ -17,7 +17,7 @@ Start here. Most important documents listed first.
 ---
 
 ## 🔧 Protocol Specification
-**[protocol.md](protocol.md)** — Full technical specification v1.4: entities, receipt structure, verification rules, cryptographic guarantees, EU AI Act mapping, SDK reference, roadmap.
+**[protocol.md](protocol.md)** — Full technical specification v1.6: entities, receipt structure, verification rules, cryptographic guarantees, EU AI Act mapping, SDK reference, roadmap.
 
 ---
 
