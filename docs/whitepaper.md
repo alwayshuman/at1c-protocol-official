@@ -1,4 +1,4 @@
-# AT1C Protocol — Whitepaper v1.4
+# AT1C Protocol — Whitepaper v1.6
 
 **Cryptographic Human Consent for AI Agent Actions**
 
@@ -23,15 +23,35 @@ AT1C (Agent Trust & Consent Control) is an open protocol that solves this proble
 
 ---
 
+## Foundational Principles: Two Independent Convergences
+
+AT1C was not built in a vacuum. Two independent bodies of principled thought — one from internet protocol design, one from legal scholarship — have arrived at the same conclusion that AT1C implements.
+
+### RFC 8890: The Internet is for End Users
+
+In 2020, the Internet Architecture Board (IAB) published RFC 8890, authored by Mark Nottingham, Chair of the IETF HTTP Working Group. The RFC establishes a formal principle: that internet protocol design decisions should favour end users over all other stakeholders when conflicts arise, and that "all decisions have the possibility of bias; of advantaging or disadvantaging different parties."
+
+RFC 8890 explicitly states that the IETF should design protocols for the pessimal environment — the worst-case scenario where platforms and networks cannot be trusted to act in users' interests.
+
+AT1C applies this principle directly to AI agent consent. The protocol is designed for the pessimal environment: a world where platforms cannot be trusted to hold your signing keys, maintain your consent records honestly, or enforce your approval boundaries without cryptographic proof. Non-custodial design, signed receipts, and independent verification are not conveniences — they are the architecture that RFC 8890's philosophy demands.
+
+### Ayres & Balkin: The Legal Accountability Gap
+
+In 2026, Yale Law School professors Ian Ayres and Jack Balkin, writing in the University of Chicago Law Review, identified the defining legal gap of the AI era: AI agents lack *mens rea* — intention — which means most existing liability frameworks do not cleanly apply to AI actions. Their solution: apply objective standards, holding the humans and companies deploying AI to standards of reasonable care.
+
+The critical implication: for objective liability to work, there must be evidence of what the human principal approved. Without a verifiable consent record, accountability collapses.
+
+AT1C's signed receipt is exactly that evidence. It transforms the legal question from "did the principal exercise reasonable care?" — hard to prove, subjective — to "is there a signed receipt for this action?" — verifiable, objective, independently auditable.
+
+**AT1C is not only an EU AI Act compliance tool. It is the evidentiary infrastructure that makes AI accountability law enforceable.**
+
+---
+
 ## The Problem: Unaccountable AI Agents
 
 Modern AI systems act silently. An agent executes a payment, files a form, or sends a communication — and there is no cryptographic record that a human approved that specific action at that specific moment.
 
-This is not merely a technical gap. It is the gap the EU AI Act was written to close. The regulation recognises that as AI agents accumulate standing privilege and act autonomously, the question of accountability becomes critical: who approved what, when, with what scope, and can that approval be independently verified?
-
-The answer today, for most systems, is: **no one can verify it, because the proof was never created.**
-
-As the number of deployed AI agents grows toward billions — and eventually toward the "trillions of agents" scale researchers project for European SMEs alone — the accountability gap compounds. Without a standard consent protocol, every agent is an unverified actor, and every action it takes is a potential compliance exposure.
+This is not merely a technical gap. It is the gap the EU AI Act was written to close. As the number of deployed AI agents grows toward billions — and eventually toward the "trillions of agents" scale researchers project for European SMEs alone — the accountability gap compounds. Without a standard consent protocol, every agent is an unverified actor, and every action it takes is a potential compliance exposure.
 
 ---
 
@@ -39,27 +59,27 @@ As the number of deployed AI agents grows toward billions — and eventually tow
 
 ### Fintech
 
-AI agents in financial services execute trades, initiate payments, manage portfolios, and interact with brokers on behalf of users. Under the EU AI Act and existing financial regulation (MiFID II, PSD2), firms must demonstrate human oversight of automated decisions.
+AI agents in financial services execute trades, initiate payments, and manage portfolios on behalf of users. Under the EU AI Act, MiFID II, and PSD2, firms must demonstrate human oversight of automated decisions.
 
-**Cost of non-compliance:** Fines up to €30M or 6% of global annual turnover under EU AI Act. MiFID II penalties up to €5M per breach.
+**Cost of non-compliance:** Fines up to €30M or 6% of global annual turnover (EU AI Act). MiFID II penalties up to €5M per breach.
 
-**AT1C solution:** Every agent-initiated transaction carries a signed receipt proving the account holder approved that specific action. Auditors verify independently, with no reliance on the firm's own logs.
+**AT1C solution:** Every agent-initiated transaction carries a signed receipt proving the account holder approved that specific action — independently verifiable, no reliance on the firm's own logs.
 
 ### Healthcare
 
-AI agents in healthcare are scheduling appointments, triaging patient queries, recommending treatments, and accessing medical records. The EU AI Act classifies health AI as high-risk, requiring the strictest oversight.
+AI agents scheduling appointments, triaging patients, recommending treatments, and accessing medical records. The EU AI Act classifies health AI as high-risk, requiring the strictest oversight and auditable records.
 
 **Cost of non-compliance:** GDPR fines up to €20M or 4% of global turnover, plus EU AI Act penalties.
 
-**AT1C solution:** Every AI-initiated action on patient data requires a verifiable human approval receipt — simultaneously the consent record required by GDPR and the oversight audit trail required by the EU AI Act.
+**AT1C solution:** Every AI-initiated action on patient data requires a verifiable human approval receipt — simultaneously the GDPR consent record and the EU AI Act oversight audit trail.
 
 ### Legal
 
-AI agents in legal practice are drafting documents, conducting due diligence, filing submissions, and communicating with counterparties. Solicitor conduct rules require informed client consent for actions taken on their behalf.
+AI agents drafting documents, conducting due diligence, filing submissions, and communicating with counterparties. Solicitor conduct rules require informed client consent for actions taken on their behalf.
 
 **Cost of non-compliance:** SRA disciplinary action, professional indemnity claims, and EU AI Act penalties.
 
-**AT1C solution:** Client consent to specific AI-initiated actions is captured as a cryptographic receipt, timestamped and independently verifiable — the informed consent record the profession requires.
+**AT1C solution:** Client consent to specific AI-initiated actions captured as a cryptographic receipt, timestamped and independently verifiable.
 
 ---
 
@@ -107,6 +127,7 @@ This maps directly onto the EU AI Act's risk classification framework.
 - A valid receipt proves the holder of the private key signed the exact action payload — no one else could have produced that signature
 - Nonces are unique and single-use — replay attacks are prevented by construction
 - Agent certificates are signed by the AT1C registry root key — agent identity is independently verifiable
+- Ed25519 (RFC 8032) — IETF-standardised elliptic curve signature scheme, strong security record
 
 **The layered security model:**
 AT1C is one layer in a defence-in-depth stack. The receipt proves a specific key signed a specific approval. The question of who holds that key is answered by your authentication layer (passkey, biometric, 2FA). Combined, these two layers deliver identity assurance and action accountability — the same separation of concerns that governs every major payment network and PKI system in production today.
@@ -122,8 +143,8 @@ AT1C is one layer in a defence-in-depth stack. The receipt proves a specific key
 
 | Article | Requirement | AT1C Response |
 |---------|-------------|---------------|
-| Art. 9 | Risk management | Approval checkpoint at every action; tiered trust maps risk to oversight |
-| Art. 13 | Transparency | Request names action and resource explicitly before approval |
+| Art. 9 | Risk management | Approval checkpoint at every action; tiered trust maps risk to oversight intensity |
+| Art. 13 | Transparency | Request names action and resource explicitly before approval is sought |
 | Art. 14 | Human oversight | No action executes without verified human approval — architecturally required |
 | Art. 17 | Quality management | Every receipt is a timestamped, tamper-evident audit record |
 | Art. 26 | Deployer obligations | Receipt log satisfies logging requirements without custom infrastructure |
@@ -146,7 +167,7 @@ AT1C is one layer in a defence-in-depth stack. The receipt proves a specific key
 
 ### Why Not Stripe
 
-Stripe charges a flat $0.30 per transaction — viable for infrequent high-value payments, but structurally incompatible with agent-scale micro-transactions. At millions of agent registrations and per-action consent fees, a $0.30 floor eliminates the unit economics entirely.
+Stripe charges a flat $0.30 per transaction — viable for infrequent high-value payments, but structurally incompatible with agent-scale micro-transactions. At millions of agent registrations and per-action consent events, a $0.30 floor eliminates the unit economics entirely.
 
 ### Algorand x402 — The Target Payment Layer
 
@@ -154,14 +175,14 @@ x402 is an HTTP-native payment protocol enabling machines to pay for resources d
 
 - **Sub-$0.0002 transaction fees** — over 1,500× cheaper than Stripe at agent scale
 - **Sub-2-second deterministic finality** — x402 payments complete inside a live HTTP request
-- **Native atomic transactions** — payment, authorisation check, and consent logging in a single atomic operation
-
-Algorand x402 uses USDC as a native stablecoin. Standard card-to-USDC onramps mean users never need to think about crypto.
+- **Stablecoin settlement in your currency** — Algorand natively supports both USDC (US dollar) and EURC (euro), both issued by Circle. EU users settle in euros with no FX conversion required — pricing and settlement stay in the same currency. Card onramps mean users never need to think about crypto.
 
 ### How AT1C and x402 Complement Each Other
 
 - **AT1C** = consent and accountability layer — proves a human approved the action
-- **x402 on Algorand** = payment settlement layer — settles the micro-payment for that action
+- **x402 on Algorand** = payment settlement layer — settles the micro-transaction in USDC or EURC depending on the user's region
+
+Together they deliver the complete compliance and settlement stack for agentic commerce, with no FX friction for EU operators.
 
 *Note: Algorand x402 integration is planned for AT1C v2.1. Near-term paid tier uses standard card payment.*
 
@@ -177,21 +198,17 @@ Register free at **at1c.com**. No credit card required.
 npm install @at1c/sdk
 ```
 
-**Step 3 — Generate your agent keypair (2 minutes)**
-```bash
-node generate-agent-keys.js --out my-agent-keys.json
-```
-Private key never leaves your machine.
+**Step 3 — Register your agent (5 minutes)**
+Visit **at1c.com/users/register-agent.php**. Your browser generates the Ed25519 keypair — the private key downloads to your device and never leaves it. Select permissions via checkboxes. The registry signs a certificate over your public key.
 
-**Step 4 — Register your agent (5 minutes)**
-Register at **at1c.com/users/register-agent.php** — set agent name, permissions, and trust tier.
-
-**Step 5 — Integrate receipts into your action flow**
+**Step 4 — Integrate receipts into your action flow**
 - Agent generates a request for the specific action
 - Human approves via your existing UI
 - SDK generates the signed receipt in milliseconds
 - Receipt is verified before action executes
 - Action executes — the receipt is your audit trail
+
+Full documentation: **github.com/at1c-protocol/at1c-protocol-official**
 
 ---
 
@@ -206,8 +223,16 @@ Register at **at1c.com/users/register-agent.php** — set agent name, permission
 | v1.5 | Planned | End-user passkey (WebAuthn/FIDO2) onboarding |
 | v1.6 | Planned | Hosted receipt storage — 10-year retention paid tier |
 | v2.0 | Planned | Tiered autonomy with alarm thresholds for fleet management |
-| v2.1 | Planned | Algorand x402 payment integration |
-| Future | Roadmap | Agent Manifest, post-quantum signatures |
+| v2.1 | Planned | Algorand x402 payment integration — USDC and EURC settlement |
+| Future | Roadmap | Agent Manifest per EU AI Act Art 13/14, post-quantum signatures |
+
+---
+
+## References
+
+- RFC 8890 — *The Internet is for End Users*. Nottingham, M. Internet Architecture Board, 2020. https://www.rfc-editor.org/info/rfc8890/
+- *The Law of AI is the Law of Risky Agents Without Intentions*. Ayres, I. & Balkin, J. University of Chicago Law Review, 2026.
+- *How Big Tech's Monopoly of AI Threatens Fair Competition*. TRENDS Group Research, 2026.
 
 ---
 
@@ -222,4 +247,4 @@ Register at **at1c.com/users/register-agent.php** — set agent name, permission
 
 ---
 
-*© 2026 AT1C Protocol Contributors · MIT Licence · Version 1.4*
+*© 2026 AT1C Protocol Contributors · MIT Licence · Version 1.6*
