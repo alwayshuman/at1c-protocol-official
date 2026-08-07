@@ -48,12 +48,12 @@ curl https://registry.at1c.com/health
 
 ## How it works
 
-1. **Request** — an AI agent asks permission to perform a specific action
-2. **Approve** — a human explicitly grants or denies it
-3. **Proof** — an Ed25519-signed receipt is generated, binding the user, action, timestamp, and nonce
-4. **Verify** — any system independently verifies the receipt before execution — no trust required
+1. **Request** an AI agent asks permission to perform a specific action
+2. **Approve** a human explicitly grants or denies it
+3. **Proof** an Ed25519-signed receipt is generated, binding the user, action, timestamp, and nonce
+4. **Verify** any system independently verifies the receipt before execution no trust required
 
-Every receipt is single-use (nonce-based replay protection). Approval is scoped to the exact action requested — not transferable to any other action.
+Every receipt is single-use (nonce-based replay protection). Approval is scoped to the exact action requested not transferable to any other action.
 
 ---
 
