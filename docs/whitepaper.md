@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-AI agents are taking consequential actions on behalf of humans and organisations — sending payments, filing documents, scheduling appointments, managing data — with no verifiable record that a human actually authorised those actions. The EU AI Act, which enters enforcement in August 2026, requires exactly that record: accountability for automated decisions, human oversight of high-risk AI actions, and auditable logs of AI behaviour.
+AI agents are taking consequential actions on behalf of humans and organisations sending payments, filing documents, scheduling appointments, managing data with no verifiable record that a human actually authorised those actions. The EU AI Act, which enters enforcement in August 2026, requires exactly that record: accountability for automated decisions, human oversight of high-risk AI actions, and auditable logs of AI behaviour.
 
 AT1C (Agent Trust & Consent Control) is an open protocol that solves this problem with a single, cryptographically verifiable primitive: a signed receipt that proves a specific human approved a specific AI agent action before it executed. AT1C works for individual users protecting their personal AI assistants, and for organisations managing fleets of agents operating across business processes.
 
