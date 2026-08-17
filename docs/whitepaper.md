@@ -162,6 +162,28 @@ AT1C is one layer in a defence-in-depth stack. The receipt proves a specific key
 
 ---
 
+## Ecosystem Positioning
+
+AT1C operates in an emerging landscape of agent governance, receipt, and identity systems. The protocol is designed to be complementary to adjacent systems, not competitive with them. This section describes the key neighbours and how AT1C relates to each.
+
+### Sello — Receiver-Attested Action Evidence
+Sello (arXiv 2606.04193) produces encrypted, receiver-attested receipts proving what a service observed during and after an interaction. The Sello author has confirmed on record: "Sello v0.1 deliberately treats authorization-token and human-consent semantics as out of scope — a Sello receipt does not presently prove human approval." AT1C and Sello are complementary at the artifact-reference layer: a Sello action record can reference an AT1C approval receipt, combining service-side observation evidence with human-side consent proof.
+
+### Stategram — Pre-Execution Enforcement with Running Totals
+Stategram is a maker-checker enforcement layer for AI agents with per-action approval gates and cumulative daily caps. It is the closest system to AT1C in the approval-receipt space. Key differences: Stategram is a custodial SaaS product — they sign receipts and hold the ledger. AT1C is a non-custodial open protocol — the principal holds the signing key. Stategram targets B2B enterprise fleet management; AT1C targets individual human principals and open ecosystem adoption. Stategram's cumulative cap mechanism (catching the drip attack) is noted as a gap in AT1C v1.x and is planned for v2.0.
+
+### Microsoft Agent Control Specification (ACS) — Runtime Policy Enforcement
+ACS is an MIT-licensed open specification defining eight lifecycle interception points for AI agent governance, including `pre_tool_call`. ACS enforces organisational policy — what an enterprise permits its agents to do. AT1C provides personal consent infrastructure — what a human principal has authorised. These are different layers of the same stack. AT1C's verify endpoint is designed to function as an ACS evidence provider, contributing receipt verification to ACS's `pre_tool_call` policy evaluation. Integration path: planned for v2.x.
+
+### Affinidi / OpenVTC — Decentralised Identity Infrastructure
+Affinidi's Open Verifiable Trust Infrastructure provides DID-based identity attestation — proving who an entity is. AT1C addresses a different question: proving that a human principal approved a specific action. Identity and consent are complementary layers. Affinidi handles "who is this agent"; AT1C handles "did a human authorise this action."
+
+### agentreceipts.ai — Post-Hoc Authorization Recording
+agentreceipts.ai records authorization claims in a structured receipt format. Their `authorization.grant_ref` field is currently a string with no cryptographic verification — the natural integration point for AT1C approval receipts. AT1C gates on verified consent before execution; agentreceipts.ai records the authorization claim after the fact. AT1C is the verification layer their spec currently lacks.
+
+### The Core Distinction
+Every adjacent system addresses what happened, who an entity is, or what a policy permits. AT1C addresses a different and prior question: **did a specific human principal explicitly approve this specific action before it executed, and can that approval be proven independently?** This is the commitment layer the agentic web requires and does not yet have.
+
 ## Cost Comparison
 
 | Approach | Annual Cost | Time to Deploy |
