@@ -133,9 +133,12 @@ This maps directly onto the EU AI Act's risk classification framework.
 AT1C is one layer in a defence-in-depth stack. The receipt proves a specific key signed a specific approval. The question of who holds that key is answered by your authentication layer (passkey, biometric, 2FA). Combined, these two layers deliver identity assurance and action accountability the same separation of concerns that governs every major payment network and PKI system in production today.
 
 **Known limitations:**
-- Ed25519 is not post-quantum secure migration to a NIST-approved post-quantum scheme is on the long-term roadmap
-- Receipt storage is currently local hosted long-term storage is a planned paid tier
-- Tiered autonomy is planned current protocol supports scoped permissions per agent
+- Ed25519 is not post-quantum secure — migration to a NIST-approved post-quantum scheme is on the long-term roadmap
+- Receipt storage is currently local — hosted long-term storage is a planned paid tier
+- Tiered autonomy is planned — current protocol supports scoped permissions per agent
+- A valid receipt proves a specific action scope was approved at a specific time — it does not prove the agent acted within that scope, what the agent observed before acting, or what it actually executed post-approval. Post-execution outcome verification is a planned future layer
+- AT1C assumes the key holder is the consenting principal. This assumption does not hold under coercion, cognitive incapacity, or caregiving delegation — circumstances adjudicated by courts, not protocols. This limitation is shared by all cryptographic consent systems
+- Per-action approval does not bound aggregate behaviour. Ten individually approved actions can combine to exceed what a reasonable principal would have consented to in aggregate. Fleet-level cumulative limits are planned for v2.0
 
 ---
 
