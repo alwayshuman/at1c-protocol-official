@@ -23,9 +23,9 @@ AT1C (Agent Trust & Consent Control) is an open protocol that solves this proble
 
 ---
 
-## Foundational Principles: Two Independent Convergences
+## Foundational Principles: Three Independent Convergences
 
-AT1C was not built in a vacuum. Two independent bodies of principled thought one from internet protocol design, one from legal scholarship have arrived at the same conclusion that AT1C implements.
+AT1C was not built in a vacuum. Three independent bodies of principled thought — from internet protocol design, legal scholarship, and peer-reviewed digital governance research — have arrived at the same conclusion that AT1C implements.
 
 ### RFC 8890: The Internet is for End Users
 
@@ -44,6 +44,14 @@ The critical implication: for objective liability to work, there must be evidenc
 AT1C's signed receipt is exactly that evidence. It transforms the legal question from "did the principal exercise reasonable care?" hard to prove, subjective to "is there a signed receipt for this action?" verifiable, objective, independently auditable.
 
 **AT1C is not only an EU AI Act compliance tool. It is the evidentiary infrastructure that makes AI accountability law enforceable.**
+
+### UiO/SODI: Platform Capture of Identity is the Failure Mode
+
+In 2026, researchers at the University of Oslo's Scandinavian Institute for Digital Governance (SODI) published peer-reviewed findings on Norway's market-based digital identity ecosystem. Their conclusion: delegating identity infrastructure to private platforms — without democratic anchoring, holistic governance, or public oversight — produces exclusion, fraud, and accountability failure. Fraud victims have been held liable for loans taken out on their digital IDs by abusive partners. People with Down syndrome have been denied access to public digital services. The Supreme Court of Norway is hearing cases that existing legal frameworks cannot resolve.
+
+This is RFC 8890's pessimal environment applied to identity: the real-world cost of platform capture. AT1C's non-custodial design — where identity and signing keys belong to the individual, never the platform — is the architectural corrective this research calls for.
+
+**Honest limitation:** AT1C's receipt proves a key was used. It cannot on its own prove the will behind that key use was free. Coercion and incapacity are circumstances adjudicated by courts, not protocols — a limitation shared by all cryptographic consent systems and disclosed in full in the Known Limitations section.
 
 ---
 
@@ -236,6 +244,9 @@ Full documentation: **github.com/at1c-protocol/at1c-protocol-official**
 - RFC 8890 — *The Internet is for End Users*. Nottingham, M. Internet Architecture Board, 2020. https://www.rfc-editor.org/info/rfc8890/
 - *The Law of AI is the Law of Risky Agents Without Intentions*. Ayres, I. & Balkin, J. University of Chicago Law Review, 2026.
 - *How Big Tech's Monopoly of AI Threatens Fair Competition*. TRENDS Group Research, 2026.
+- *Digital Identity Management in Norway is a Success but also a Disaster*. Scandinavian Institute for Digital Governance (SODI), University of Oslo, 2026.
+- *2026 AI Legal Forecast: From Innovation to Compliance*. Baker Donelson, January 2026. https://www.bakerdonelson.com/2026-ai-legal-forecast-from-innovation-to-compliance
+- *Patterns and Problems in Emerging Multiagent Systems*. Anthropic Frontier Red Team, August 2026. https://www.anthropic.com/research/multiagent-systems
 
 ---
 
