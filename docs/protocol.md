@@ -150,6 +150,27 @@ Receipts are serialised deterministically before signing to ensure consistent ha
 
 ---
 
+
+## Chapter 5a — Principal Lifecycle Fields (Reserved — v2.x)
+
+The following fields are reserved in the Receipt schema for v2.x principal lifecycle management. They are optional and undefined in v1.x. Verifiers must ignore unknown fields to maintain forward compatibility.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `principalValidUntil` | ISO timestamp | The approving principal's authority expires at this time. Receipts produced after this timestamp should be treated as unattributed. |
+| `dissolutionTrigger` | string enum | Event that invalidates this agent's principal: `principal_deceased`, `entity_dissolved`, `key_revoked` |
+| `inheritorAgentId` | string | Agent ID that inherits signing authority on the trigger event |
+| `postDissolutionPolicy` | string enum | Verifier behaviour after dissolution: `reject` (default), `warn`, `audit_only` |
+
+### Rationale
+
+AI agent proliferation requires the same governance infrastructure as vehicle registration: agents must be registered to a verified principal, and principal termination (death, corporate dissolution) must not produce zombie agents whose receipts remain cryptographically valid with no living principal behind them.
+
+A dissolved corporation's agent producing AT1C receipts does not have a valid principal with legal standing. These fields allow registries and verifiers to enforce principal continuity without requiring a protocol fork for deployments that add them later.
+
+---
+
+
 ## Chapter 6 — Five Core Safety Rules
 
 ### Rule 1 — No Implicit Authority
@@ -166,8 +187,6 @@ Any system receiving a request must verify the receipt before executing the acti
 
 ### Rule 5 — Replay Protection
 A previously used nonce must not be accepted again. Replay detection prevents repeated execution using reused receipts.
-
----
 
 ## Chapter 7 — Cryptographic Implementation
 
@@ -261,7 +280,8 @@ Full documentation: **github.com/at1c-protocol/at1c-protocol-official**
 | v1.6 | Planned | Hosted receipt storage — 10-year retention paid tier |
 | v2.0 | Planned | Tiered autonomy with alarm thresholds |
 | v2.1 | Planned | Algorand x402 payment integration |
-| Future | Roadmap | Agent Manifest, post-quantum signatures |
+| v2.2 | Planned | Principal lifecycle — agent inheritance, dissolution triggers, zombie corp protection |
+| Future | Roadmap | Agent Manifest per EU AI Act Art 13/14, post-quantum signature migration, IANA well-known URI registration |
 
 ---
 

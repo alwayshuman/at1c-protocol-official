@@ -18,8 +18,14 @@ export interface ReceiptPayload {
   action: string
   timestamp: string
   expiresAt: string
+  // Reserved fields — v2.x principal lifecycle management
+  // Enables agent inheritance, dissolution triggers, and zombie corp protection
+  // Leave undefined for v1.x; verifiers must ignore unknown fields
+  principalValidUntil?: string        // ISO timestamp — principal authority expires at this time
+  dissolutionTrigger?: string         // Event that invalidates this agent: 'principal_deceased' | 'entity_dissolved' | 'key_revoked'
+  inheritorAgentId?: string           // Agent ID that inherits authority on trigger event
+  postDissolutionPolicy?: 'reject' | 'warn' | 'audit_only'  // Verifier behaviour after dissolution
 }
-
 export interface SignedReceipt extends ReceiptPayload {
   signature: string
   publicKey: string
