@@ -1,8 +1,8 @@
-import * as ed from '@noble/ed25519'
-import { sha512 } from '@noble/hashes/sha2.js'
+import { ml_dsa65 } from '@noble/post-quantum/ml-dsa.js'
+import { randomBytes } from '@noble/hashes/utils'
 
-ed.etc.sha512Sync = sha512
 const _usedNonces = new Set<string>()
+
 export interface KeyPair {
   secretKey: Uint8Array
   publicKey: Uint8Array
@@ -12,29 +12,36 @@ export interface ReceiptPayload {
   receiptId: string
   nonce: string
   version: string
+  algorithm: 'ML-DSA-65'
   status: 'approved' | 'denied'
   userId: string
   agentId: string
   action: string
   timestamp: string
   expiresAt: string
-  // Reserved fields — v2.x principal lifecycle management
-  // Enables agent inheritance, dissolution triggers, and zombie corp protection
-  // Leave undefined for v1.x; verifiers must ignore unknown fields
-  principalValidUntil?: string        // ISO timestamp — principal authority expires at this time
-  dissolutionTrigger?: string         // Event that invalidates this agent: 'principal_deceased' | 'entity_dissolved' | 'key_revoked'
-  inheritorAgentId?: string           // Agent ID that inherits authority on trigger event
-  postDissolutionPolicy?: 'reject' | 'warn' | 'audit_only'  // Verifier behaviour after dissolution
+  principalValidUntil?: string
+  dissolutionTrigger?: 'principal_deceased' | 'entity_dissolved' | 'key_revoked'
+  inheritorAgentId?: string
+  postDissolutionPolicy?: 'reject' | 'warn' | 'audit_only'
 }
+
 export interface SignedReceipt extends ReceiptPayload {
   signature: string
   publicKey: string
 }
 
+export interface VerifyResult {
+  valid: boolean
+  reason?: string
+}
+
 export function generateKeyPair(): KeyPair {
-  const secret = require("crypto").randomBytes(32)
-  const publicKey = ed.getPublicKey(secret)
-  return { secretKey: secret, publicKey }
+  const seed = randomBytes(32)
+  const keys = ml_dsa65.keygen(seed)
+  return {
+    secretKey: keys.secretKey,
+    publicKey: keys.publicKey,
+  }
 }
 
 export function publicKeyToHex(publicKey: Uint8Array): string {
@@ -57,32 +64,29 @@ export function canonicalise(payload: ReceiptPayload): Uint8Array {
   const sorted = Object.keys(payload)
     .sort()
     .reduce((acc: Record<string, unknown>, key) => {
-      acc[key] = (payload as unknown as Record<string, unknown>)[key]
+      const val = (payload as unknown as Record<string, unknown>)[key]
+      if (val !== undefined) acc[key] = val
       return acc
     }, {})
   return new TextEncoder().encode(JSON.stringify(sorted))
-}
-
-export function signReceipt(
+}export function signReceipt(
   payload: ReceiptPayload,
-  secretKey: Uint8Array
+  keyPair: KeyPair
 ): SignedReceipt {
   const bytes = canonicalise(payload)
-  const sigBytes = ed.sign(bytes, secretKey)
-  const publicKey = ed.getPublicKey(secretKey)
+  const sigBytes = ml_dsa65.sign(bytes, keyPair.secretKey)
   return {
     ...payload,
+    algorithm: 'ML-DSA-65',
     signature: Buffer.from(sigBytes).toString('hex'),
-    publicKey: Buffer.from(publicKey).toString('hex'),
+    publicKey: Buffer.from(keyPair.publicKey).toString('hex'),
   }
 }
 
-export interface VerifyResult {
-  valid: boolean
-  reason?: string
-}
-
 export function verifyReceipt(receipt: SignedReceipt): VerifyResult {
+  if (receipt.algorithm !== 'ML-DSA-65') {
+    return { valid: false, reason: 'unsupported_algorithm' }
+  }
   const now = new Date()
   const expiresAt = new Date(receipt.expiresAt)
   if (now > expiresAt) {
@@ -91,30 +95,46 @@ export function verifyReceipt(receipt: SignedReceipt): VerifyResult {
   if (receipt.status !== 'approved') {
     return { valid: false, reason: 'not_approved' }
   }
+  if (receipt.principalValidUntil) {
+    const principalExpiry = new Date(receipt.principalValidUntil)
+    if (now > principalExpiry) {
+      const policy = receipt.postDissolutionPolicy ?? 'reject'
+      if (policy === 'reject') {
+        return { valid: false, reason: 'principal_expired' }
+      }
+    }
+  }
   try {
     const payload: ReceiptPayload = {
-      receiptId: receipt.receiptId,
-      nonce: receipt.nonce,
-      version: receipt.version,
-      status: receipt.status,
-      userId: receipt.userId,
-      agentId: receipt.agentId,
-      action: receipt.action,
-      timestamp: receipt.timestamp,
-      expiresAt: receipt.expiresAt,
+      receiptId:   receipt.receiptId,
+      nonce:       receipt.nonce,
+      version:     receipt.version,
+      algorithm:   receipt.algorithm,
+      status:      receipt.status,
+      userId:      receipt.userId,
+      agentId:     receipt.agentId,
+      action:      receipt.action,
+      timestamp:   receipt.timestamp,
+      expiresAt:   receipt.expiresAt,
+      ...(receipt.principalValidUntil   && { principalValidUntil:   receipt.principalValidUntil }),
+      ...(receipt.dissolutionTrigger    && { dissolutionTrigger:    receipt.dissolutionTrigger }),
+      ...(receipt.inheritorAgentId      && { inheritorAgentId:      receipt.inheritorAgentId }),
+      ...(receipt.postDissolutionPolicy && { postDissolutionPolicy: receipt.postDissolutionPolicy }),
     }
-    const bytes = canonicalise(payload)
-    const sigBytes = Uint8Array.from(Buffer.from(receipt.signature, 'hex'))
+    const bytes       = canonicalise(payload)
+    const sigBytes    = Uint8Array.from(Buffer.from(receipt.signature, 'hex'))
     const pubKeyBytes = hexToPublicKey(receipt.publicKey)
-    const valid = ed.verify(sigBytes, bytes, pubKeyBytes)
+    const valid = ml_dsa65.verify(sigBytes, bytes, pubKeyBytes)
     if (!valid) {
       return { valid: false, reason: 'invalid_signature' }
     }
   } catch {
     return { valid: false, reason: 'malformed_receipt' }
   }
- if (_usedNonces.has(receipt.nonce)) return { valid: false, reason: 'replay_detected' }
-  _usedNonces.add(receipt.nonce)  
+  if (_usedNonces.has(receipt.nonce)) {
+    return { valid: false, reason: 'replay_detected' }
+  }
+  _usedNonces.add(receipt.nonce)
   return { valid: true }
 }
 
@@ -125,21 +145,30 @@ export function buildReceipt(
     action: string
     status: 'approved' | 'denied'
     ttlSeconds?: number
+    principalValidUntil?: string
+    dissolutionTrigger?: 'principal_deceased' | 'entity_dissolved' | 'key_revoked'
+    inheritorAgentId?: string
+    postDissolutionPolicy?: 'reject' | 'warn' | 'audit_only'
   },
-  secretKey: Uint8Array
+    keyPair: KeyPair
 ): SignedReceipt {
   const now = new Date()
   const ttl = config.ttlSeconds ?? 300
   const payload: ReceiptPayload = {
     receiptId: crypto.randomUUID(),
-    nonce: crypto.randomUUID(),
-    version: '1.0',
-    status: config.status,
-    userId: config.userId,
-    agentId: config.agentId,
-    action: config.action,
+    nonce:     crypto.randomUUID(),
+    version:   '1.6',
+    algorithm: 'ML-DSA-65',
+    status:    config.status,
+    userId:    config.userId,
+    agentId:   config.agentId,
+    action:    config.action,
     timestamp: now.toISOString(),
     expiresAt: new Date(now.getTime() + ttl * 1000).toISOString(),
+    ...(config.principalValidUntil   && { principalValidUntil:   config.principalValidUntil }),
+    ...(config.dissolutionTrigger    && { dissolutionTrigger:    config.dissolutionTrigger }),
+    ...(config.inheritorAgentId      && { inheritorAgentId:      config.inheritorAgentId }),
+    ...(config.postDissolutionPolicy && { postDissolutionPolicy: config.postDissolutionPolicy }),
   }
-  return signReceipt(payload, secretKey)
+    return signReceipt(payload, keyPair)
 }

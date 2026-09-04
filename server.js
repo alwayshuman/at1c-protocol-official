@@ -8,7 +8,7 @@ const { ALGORAND_MAINNET_CAIP2 } = require('@x402-avm/avm')
 const app = express()
 app.use(express.json())
 
-const PAY_TO = 'NBYSHLSNR7PRQ5NMWCSP3LRLFHJPAUYNXZLSB2YARWWMIPKBOM3WCID5NI'
+const PAY_TO = 'IVCQ6VSUINTBEATREWRWSCWV26THLJ44PRGIA7X4V626LQA4BH0E3ZDEQ4'
 
 const facilitatorClient = new HTTPFacilitatorClient({
   url: 'https://facilitator.goplausible.xyz'

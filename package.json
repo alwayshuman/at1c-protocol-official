@@ -1,6 +1,6 @@
 {
   "name": "@at1c/sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "**AT1C Protocol**",
   "main": "index.js",
   "directories": {
@@ -34,8 +34,8 @@
     "vitest": "^4.1.8"
   },
   "dependencies": {
-    "@noble/ed25519": "^3.1.0",
     "@noble/hashes": "^2.2.0",
+    "@noble/post-quantum": "^0.7.1",
     "@x402-avm/avm": "^2.6.1",
     "@x402-avm/core": "^2.6.1",
     "@x402-avm/express": "^2.6.1",

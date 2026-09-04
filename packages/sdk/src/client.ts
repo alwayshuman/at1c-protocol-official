@@ -1,18 +1,18 @@
 import * as fs from 'fs'
 import * as readline from 'readline'
 import { ApprovalReceipt } from './types'
-import { buildReceipt, verifyReceipt, generateKeyPair, secretKeyToHex, publicKeyToHex, SignedReceipt } from './crypto'
+import { buildReceipt, verifyReceipt, generateKeyPair, secretKeyToHex, publicKeyToHex, SignedReceipt, KeyPair } from './crypto'
 
 export class AT1C {
   private approvalLog: SignedReceipt[] = []
   private seenReceipts = new Set<string>()
   private blockedActions: any[]
-  private secretKey: Uint8Array
+  private keyPair: KeyPair
   private publicKey: Uint8Array
 
   constructor() {
     const keys = generateKeyPair()
-    this.secretKey = keys.secretKey
+    this.keyPair = keys
     this.publicKey = keys.publicKey
     try {
       this.blockedActions = JSON.parse(fs.readFileSync('policies.json', 'utf-8'))
@@ -76,7 +76,7 @@ export class AT1C {
         action: config.action,
         status: approved ? 'approved' : 'denied',
       },
-      this.secretKey
+        this.keyPair
     )
 
     this.approvalLog.push(receipt)

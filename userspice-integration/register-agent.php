@@ -190,14 +190,8 @@ if (!empty($_POST)) {
   <?php endif; ?>
 </div>
 
-<script>
-async function at1cSupportsEd25519() {
-  if (!window.crypto || !window.crypto.subtle) return false;
-  try {
-    await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign', 'verify']);
-    return true;
-  } catch { return false; }
-}
+<script type="module">
+import { ml_dsa65 } from 'https://esm.sh/@noble/post-quantum@0.2.1/ml-dsa.js';
 
 function bufToHex(buf) {
   return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
@@ -206,30 +200,29 @@ function bufToHex(buf) {
 let generatedPrivateKeyHex = null;
 
 document.getElementById('at1c-generate-btn').addEventListener('click', async () => {
-  const supported = await at1cSupportsEd25519();
-  if (!supported) {
+  try {
+    const seed = crypto.getRandomValues(new Uint8Array(32));
+    const keys = ml_dsa65.keygen(seed);
+
+    const pubkeyHex = bufToHex(keys.publicKey);
+    generatedPrivateKeyHex = bufToHex(keys.secretKey);
+
+    document.getElementById('at1c-pubkey-display').value = pubkeyHex;
+    document.getElementById('at1c-pubkey-hidden').value  = pubkeyHex;
+    document.getElementById('at1c-key-result').style.display = 'block';
+    document.getElementById('at1c-generate-btn').disabled = true;
+  } catch (err) {
+    console.error('ML-DSA-65 key generation failed:', err);
     document.getElementById('at1c-unsupported').style.display = 'block';
-    return;
   }
-
-  const keyPair = await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign', 'verify']);
-  const spki    = await crypto.subtle.exportKey('spki', keyPair.publicKey);
-  const pkcs8   = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
-
-  const pubkeyHex = bufToHex(spki);
-  generatedPrivateKeyHex = bufToHex(pkcs8);
-
-  document.getElementById('at1c-pubkey-display').value = pubkeyHex;
-  document.getElementById('at1c-pubkey-hidden').value  = pubkeyHex;
-  document.getElementById('at1c-key-result').style.display = 'block';
-  document.getElementById('at1c-generate-btn').disabled = true;
 });
 
 document.getElementById('at1c-download-btn').addEventListener('click', () => {
   const data = JSON.stringify({
     privateKey: generatedPrivateKeyHex,
     publicKey:  document.getElementById('at1c-pubkey-display').value,
-    format:     'pkcs8-hex / spki-hex',
+    algorithm:  'ML-DSA-65',
+    standard:   'NIST FIPS 204',
     generated:  new Date().toISOString(),
     warning:    'Keep this file private. AT1C never has a copy of your private key.'
   }, null, 2);
@@ -247,5 +240,4 @@ document.getElementById('at1c-confirm-saved').addEventListener('change', (e) => 
   document.getElementById('at1c-submit-btn').disabled = !e.target.checked;
 });
 </script>
-
 <?php require_once $abs_us_root.$us_url_root.'users/includes/html_footer.php'; ?>

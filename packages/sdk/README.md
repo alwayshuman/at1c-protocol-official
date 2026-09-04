@@ -241,7 +241,7 @@ Loads keys from disk or generates and saves new ones.
 ## Run the Demo
 
 ```bash
-git clone https://github.com/alwayshuman/at1c-protocol-official.git
+git clone https://github.com/at1c-protocol/at1c-protocol-official.git
 cd at1c-protocol-official
 npm install
 npm run demo          # terminal output

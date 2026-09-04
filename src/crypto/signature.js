@@ -1,4 +1,4 @@
-const crypto = require("crypto")
+const { ml_dsa65 } = require('@noble/post-quantum/ml-dsa')
 
 function normalize(data) {
   return JSON.stringify(
@@ -13,24 +13,25 @@ function normalize(data) {
 
 function signData(privateKey, data) {
   const buffer = Buffer.from(normalize(data))
-  return crypto.sign(null, buffer, privateKey).toString("hex")
+  const sig = ml_dsa65.sign(privateKey, buffer)
+  return Buffer.from(sig).toString('hex')
 }
 
 function verifySignature(publicKey, data, signature) {
   if (!signature) return false
-
   const buffer = Buffer.from(normalize(data))
-
-  return crypto.verify(
-    null,
-    buffer,
-    publicKey,
-    Buffer.from(signature, "hex")
-  )
+  const sigBytes = Uint8Array.from(Buffer.from(signature, 'hex'))
+  return ml_dsa65.verify(publicKey, buffer, sigBytes)
 }
 
 function generateKeypair() {
-  return crypto.generateKeyPairSync("ed25519")
+  const { randomBytes } = require('@noble/hashes/utils')
+  const seed = randomBytes(32)
+  const keys = ml_dsa65.keygen(seed)
+  return {
+    privateKey: keys.secretKey,
+    publicKey: keys.publicKey
+  }
 }
 
 module.exports = {

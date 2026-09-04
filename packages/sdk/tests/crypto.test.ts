@@ -9,7 +9,7 @@ import {
   hexToPublicKey,
   ReceiptPayload,
   SignedReceipt,
-} from '../src/crypto'
+} from '../dist/src/crypto'
 
 // ─── Helpers ─────────────────────────────────────────────
 
@@ -19,6 +19,7 @@ function makePayload(overrides: Partial<ReceiptPayload> = {}): ReceiptPayload {
     receiptId: 'test-receipt-001',
     nonce: 'test-nonce-001',
     version: '1.0',
+    algorithm: 'ML-DSA-65',
     status: 'approved',
     userId: 'user_test',
     agentId: 'agent_test',
@@ -36,8 +37,8 @@ describe('generateKeyPair', () => {
     const { secretKey, publicKey } = generateKeyPair()
     expect(secretKey).toBeInstanceOf(Uint8Array)
     expect(publicKey).toBeInstanceOf(Uint8Array)
-    expect(secretKey.length).toBe(32)
-    expect(publicKey.length).toBe(32)
+    expect(secretKey.length).toBe(4032)
+    expect(publicKey.length).toBe(1952)
   })
 
   it('generates unique keypairs each time', () => {
@@ -53,7 +54,7 @@ describe('canonicalise', () => {
   it('produces same bytes regardless of key insertion order', () => {
     const payload = makePayload()
     const a = canonicalise(payload)
-    const shuffled: ReceiptPayload = {
+      const shuffled: ReceiptPayload = {
       expiresAt: payload.expiresAt,
       action: payload.action,
       receiptId: payload.receiptId,
@@ -62,6 +63,7 @@ describe('canonicalise', () => {
       status: payload.status,
       timestamp: payload.timestamp,
       userId: payload.userId,
+      algorithm: payload.algorithm,
       version: payload.version,
     }
     const b = canonicalise(shuffled)
@@ -73,16 +75,16 @@ describe('canonicalise', () => {
 
 describe('signReceipt + verifyReceipt', () => {
   it('signs a receipt and verifies it successfully', () => {
-    const { secretKey } = generateKeyPair()
+    const keyPair = generateKeyPair()
     const payload = makePayload()
-    const receipt = signReceipt(payload, secretKey)
+    const receipt = signReceipt(payload, keyPair)
     const result = verifyReceipt(receipt)
     expect(result.valid).toBe(true)
   })
 
   it('fails verification if signature is tampered', () => {
-    const { secretKey } = generateKeyPair()
-    const receipt = signReceipt(makePayload(), secretKey)
+    const keyPair = generateKeyPair()
+    const receipt = signReceipt(makePayload(), keyPair)
     const tampered: SignedReceipt = {
       ...receipt,
       signature: 'a'.repeat(128),
@@ -92,8 +94,8 @@ describe('signReceipt + verifyReceipt', () => {
   })
 
   it('fails verification if action is tampered', () => {
-    const { secretKey } = generateKeyPair()
-    const receipt = signReceipt(makePayload(), secretKey)
+    const keyPair = generateKeyPair()
+    const receipt = signReceipt(makePayload(), keyPair)
     const tampered: SignedReceipt = {
       ...receipt,
       action: 'delete_database',
@@ -104,8 +106,8 @@ describe('signReceipt + verifyReceipt', () => {
   })
 
   it('fails verification if userId is tampered', () => {
-    const { secretKey } = generateKeyPair()
-    const receipt = signReceipt(makePayload(), secretKey)
+    const keyPair = generateKeyPair()
+    const receipt = signReceipt(makePayload(), keyPair)
     const tampered: SignedReceipt = {
       ...receipt,
       userId: 'attacker_999',
@@ -116,20 +118,20 @@ describe('signReceipt + verifyReceipt', () => {
   })
 
   it('fails verification on expired receipt', () => {
-    const { secretKey } = generateKeyPair()
+    const keyPair = generateKeyPair()
     const payload = makePayload({
       expiresAt: new Date(Date.now() - 1000).toISOString(),
     })
-    const receipt = signReceipt(payload, secretKey)
+    const receipt = signReceipt(payload, keyPair)
     const result = verifyReceipt(receipt)
     expect(result.valid).toBe(false)
     expect(result.reason).toBe('expired')
   })
 
   it('fails verification if status is denied', () => {
-    const { secretKey } = generateKeyPair()
+    const keyPair = generateKeyPair()
     const payload = makePayload({ status: 'denied' })
-    const receipt = signReceipt(payload, secretKey)
+    const receipt = signReceipt(payload, keyPair)
     const result = verifyReceipt(receipt)
     expect(result.valid).toBe(false)
     expect(result.reason).toBe('not_approved')
@@ -140,7 +142,7 @@ describe('signReceipt + verifyReceipt', () => {
 
 describe('buildReceipt', () => {
   it('builds and returns a valid signed receipt', () => {
-    const { secretKey } = generateKeyPair()
+    const keyPair = generateKeyPair()
     const receipt = buildReceipt(
       {
         userId: 'user_test',
@@ -148,7 +150,7 @@ describe('buildReceipt', () => {
         action: 'login',
         status: 'approved',
       },
-      secretKey
+      keyPair
     )
     expect(receipt.receiptId).toBeTruthy()
     expect(receipt.signature).toBeTruthy()
@@ -158,7 +160,7 @@ describe('buildReceipt', () => {
   })
 
   it('respects custom ttlSeconds', () => {
-    const { secretKey } = generateKeyPair()
+    const keyPair = generateKeyPair()
     const receipt = buildReceipt(
       {
         userId: 'user_test',
@@ -167,7 +169,7 @@ describe('buildReceipt', () => {
         status: 'approved',
         ttlSeconds: 60,
       },
-      secretKey
+      keyPair
     )
     const diff =
       new Date(receipt.expiresAt).getTime() -
@@ -180,7 +182,7 @@ describe('replay protection', () => {
     const keys = generateKeyPair()
     const receipt = buildReceipt(
       { userId: 'user_1', agentId: 'agent_1', action: 'test', status: 'approved' },
-      keys.secretKey
+      keys
     )
     const first = verifyReceipt(receipt)
     const second = verifyReceipt(receipt)
@@ -189,3 +191,4 @@ describe('replay protection', () => {
     expect(second.reason).toBe('replay_detected')
   })
 })
+

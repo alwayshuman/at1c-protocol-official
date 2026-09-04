@@ -3,7 +3,7 @@ export declare class AT1C {
     private approvalLog;
     private seenReceipts;
     private blockedActions;
-    private secretKey;
+    private keyPair;
     private publicKey;
     constructor();
     getPublicKey(): string;

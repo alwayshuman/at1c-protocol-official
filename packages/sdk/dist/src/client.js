@@ -42,7 +42,7 @@ class AT1C {
         this.approvalLog = [];
         this.seenReceipts = new Set();
         const keys = (0, crypto_1.generateKeyPair)();
-        this.secretKey = keys.secretKey;
+        this.keyPair = keys;
         this.publicKey = keys.publicKey;
         try {
             this.blockedActions = JSON.parse(fs.readFileSync('policies.json', 'utf-8'));
@@ -93,7 +93,7 @@ class AT1C {
             agentId: config.agentId ?? 'unknown',
             action: config.action,
             status: approved ? 'approved' : 'denied',
-        }, this.secretKey);
+        }, this.keyPair);
         this.approvalLog.push(receipt);
         const check = this.checkReceipt(receipt);
         if (!check.valid) {
